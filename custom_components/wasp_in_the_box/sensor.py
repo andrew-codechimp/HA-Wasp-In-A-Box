@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Any
 
 import voluptuous as vol
+
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -15,8 +16,7 @@ from homeassistant.const import (
     STATE_UNKNOWN,
 )
 from homeassistant.core import Event, EventStateChangedData, HomeAssistant, callback
-from homeassistant.helpers import device_registry as dr
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
     AddEntitiesCallback,
@@ -32,26 +32,13 @@ from homeassistant.util import dt as dt_util
 
 from .const import (
     ATTR_LAST_MODIFIED,
-    CONF_ENTITY_ID,
+    CONF_WASP_ID,
     DOMAIN,
     LOGGER,
     PLATFORMS,
 )
 
-ICON = "mdi:calculator"
-
-
-@callback
-def async_get_source_entity_device_id(
-    hass: HomeAssistant, entity_id: str
-) -> str | None:
-    """Get the entity device id."""
-    registry = er.async_get(hass)
-
-    if not (source_entity := registry.async_get(entity_id)):
-        return None
-
-    return source_entity.device_id
+ICON = "mdi:home-outline"
 
 
 async def config_entry_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
@@ -69,13 +56,13 @@ async def async_setup_entry(
     device_registry = dr.async_get(hass)
     try:
         source_entity_id = er.async_validate_entity_id(
-            entity_registry, config_entry.options[CONF_ENTITY_ID]
+            entity_registry, config_entry.options[CONF_WASP_ID]
         )
     except vol.Invalid:
         # The entity is identified by an unknown entity registry ID
         LOGGER.error(
             "Failed to setup wasp_in_the_box for unknown entity %s",
-            config_entry.options[CONF_ENTITY_ID],
+            config_entry.options[CONF_WASP_ID],
         )
         return False
 
@@ -96,21 +83,6 @@ async def async_setup_entry(
         if "entity_id" in data["changes"]:
             # Entity_id changed, reload the config entry
             await hass.config_entries.async_reload(config_entry.entry_id)
-
-        if device_id and "device_id" in data["changes"]:
-            # If the tracked entity is no longer in the device, remove our config entry
-            # from the device
-            if (
-                not (entity_entry := entity_registry.async_get(data["entity_id"]))
-                or not device_registry.async_get(device_id)
-                or entity_entry.device_id == device_id
-            ):
-                # No need to do any cleanup
-                return
-
-            device_registry.async_update_device(
-                device_id, remove_config_entry_id=config_entry.entry_id
-            )
 
     config_entry.async_on_unload(
         async_track_entity_registry_updated_event(
@@ -142,15 +114,13 @@ async def async_setup_platform(
     discovery_info: DiscoveryInfoType | None = None,
 ) -> None:
     """Set up the wasp_in_the_box sensor."""
-    source_entity_id: str = config[CONF_ENTITY_ID]
+    source_entity_id: str = config[CONF_WASP_ID]
     name: str | None = config.get(CONF_NAME)
     unique_id = config.get(CONF_UNIQUE_ID)
 
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
-    async_add_entities(
-        [WaspInTheBoxSensor(hass, source_entity_id, name, unique_id)]
-    )
+    async_add_entities([WaspInTheBoxSensor(hass, source_entity_id, name, unique_id)])
 
 
 class WaspInTheBoxSensor(SensorEntity, RestoreEntity):
@@ -177,10 +147,6 @@ class WaspInTheBoxSensor(SensorEntity, RestoreEntity):
         registry = er.async_get(hass)
         device_registry = dr.async_get(hass)
         source_entity = registry.async_get(source_entity_id)
-        device_id = source_entity.device_id if source_entity else None
-
-        if device_id and (device := device_registry.async_get(device_id)):
-            self.device_entry = device
 
     async def async_added_to_hass(self) -> None:
         """Handle added to Hass."""

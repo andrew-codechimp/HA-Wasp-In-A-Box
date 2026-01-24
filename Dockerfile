@@ -10,4 +10,4 @@ RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
 
 # Switch to vscode for all runtime operations
 USER vscode
-WORKDIR /workspace/$github_repo_name$
+WORKDIR /workspace/HA-Wasp-In-The-Box

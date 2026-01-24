@@ -1,13 +1,13 @@
 {
-  "name": "andrew-codechimp/label-state",
-  "build": {"dockerfile": "Dockerfile"},
+  "name": "andrew-codechimp/wasp_in_the_box",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
   "remoteUser": "vscode",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/node:1": {
-    "version": "lts"
-  },
-  "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+    "ghcr.io/devcontainers-extra/features/apt-packages:1": {
       "packages": [
         "build-essential",
         "ffmpeg",

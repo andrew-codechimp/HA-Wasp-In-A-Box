@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from unittest.mock import AsyncMock
 
+from custom_components.wasp_in_the_box.const import DOMAIN
+
 from homeassistant import config_entries
 from homeassistant.const import CONF_ENTITY_ID, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
-
-from custom_components.wasp_in_the_box.const import DOMAIN
 
 from .const import DEFAULT_NAME
 

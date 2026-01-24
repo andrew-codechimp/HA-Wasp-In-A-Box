@@ -8,16 +8,16 @@ from __future__ import annotations
 
 import voluptuous as vol
 from awesomeversion.awesomeversion import AwesomeVersion
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import __version__ as HA_VERSION  # noqa: N812
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import config_validation as cv, entity_registry as er
 from homeassistant.helpers.helper_integration import async_handle_source_entity_changes
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
-    CONF_ENTITY_ID,
+    CONF_WASP_ID,
     DOMAIN,
     LOGGER,
     MIN_HA_VERSION,
@@ -25,19 +25,6 @@ from .const import (
 )
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
-
-
-@callback
-def async_get_source_entity_device_id(
-    hass: HomeAssistant, entity_id: str
-) -> str | None:
-    """Get the entity device id."""
-    registry = er.async_get(hass)
-
-    if not (source_entity := registry.async_get(entity_id)):
-        return None
-
-    return source_entity.device_id
 
 
 async def async_setup(
@@ -64,20 +51,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     entity_registry = er.async_get(hass)
     try:
         entity_id = er.async_validate_entity_id(
-            entity_registry, entry.options[CONF_ENTITY_ID]
+            entity_registry, entry.options[CONF_WASP_ID]
         )
     except vol.Invalid:
         # The entity is identified by an unknown entity registry ID
         LOGGER.error(
             "Failed to setup wasp_in_the_box for unknown entity %s",
-            entry.options[CONF_ENTITY_ID],
+            entry.options[CONF_WASP_ID],
         )
         return False
 
     def set_source_entity_id_or_uuid(source_entity_id: str) -> None:
         hass.config_entries.async_update_entry(
             entry,
-            options={**entry.options, CONF_ENTITY_ID: source_entity_id},
+            options={**entry.options, CONF_WASP_ID: source_entity_id},
         )
 
     async def source_entity_removed() -> None:
@@ -91,8 +78,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             add_helper_config_entry_to_device=False,
             helper_config_entry_id=entry.entry_id,
             set_source_entity_id_or_uuid=set_source_entity_id_or_uuid,
-            source_device_id=async_get_source_entity_device_id(hass, entity_id),
-            source_entity_id_or_uuid=entry.options[CONF_ENTITY_ID],
+            source_entity_id_or_uuid=entry.options[CONF_WASP_ID],
             source_entity_removed=source_entity_removed,
         )
     )

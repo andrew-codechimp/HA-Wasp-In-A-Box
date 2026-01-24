@@ -2,10 +2,12 @@
     "config": {
         "step": {
             "user": {
-                "title": "Add Wasp In The Box",
+                "title": "Add Wasp in the Box",
                 "description": "Create a sensor that does something.",
                 "data": {
-                    "entity_id": "Input entity",
+                    "wasp_id": "Wasp entity",
+                    "box_id": "Box entity",
+                    "delay": "Delay (seconds)",
                     "name": "Name"
                 }
             }
@@ -15,7 +17,9 @@
         "step": {
             "init": {
                 "data": {
-                    "entity_id": "Input entity"
+                    "wasp_id": "Wasp entity",
+                    "box_id": "Box entity",
+                    "delay": "Delay (seconds)"
                 }
             }
         }

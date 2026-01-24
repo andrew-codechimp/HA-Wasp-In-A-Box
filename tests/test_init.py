@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-from homeassistant.config_entries import ConfigEntryState
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers import device_registry as dr
-from homeassistant.helpers import entity_registry as er
+from custom_components.wasp_in_the_box.const import DOMAIN
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.wasp_in_the_box.const import DOMAIN
+from homeassistant.config_entries import ConfigEntryState
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 
 from .const import DEFAULT_NAME
 
@@ -58,7 +57,7 @@ async def test_setup(
             "name": DEFAULT_NAME,
             "entity_id": "sensor.test_source",
         },
-        title=DEFAULT_NAME
+        title=DEFAULT_NAME,
     )
     wasp_in_the_box_config_entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(wasp_in_the_box_config_entry.entry_id)

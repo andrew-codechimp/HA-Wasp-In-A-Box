@@ -8,10 +8,10 @@ from homeassistant.const import Platform
 
 LOGGER: Logger = getLogger(__package__)
 
-MIN_HA_VERSION = "2025.8"
+MIN_HA_VERSION = "2025.11"
 
 manifestfile = Path(__file__).parent / "manifest.json"
-with open(file=manifestfile, encoding="UTF-8") as json_file:
+with manifestfile.open(encoding="UTF-8") as json_file:
     manifest_data = json.load(json_file)
 
 DOMAIN = manifest_data.get("domain")
@@ -22,6 +22,10 @@ CONFIG_VERSION = 1
 
 PLATFORMS = [Platform.SENSOR]
 
-CONF_ENTITY_ID = "entity_id"
+CONF_WASP_ID = "wasp_id"
+CONF_BOX_ID = "box_id"
+CONF_DELAY = "delay"
+
+DEFAULT_DELAY = 30
 
 ATTR_LAST_MODIFIED = "last_modified"

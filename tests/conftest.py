@@ -7,16 +7,12 @@ from typing import Any
 from unittest.mock import AsyncMock, patch
 
 import pytest
-from homeassistant.config_entries import SOURCE_USER
-from homeassistant.const import (
-    CONF_ENTITY_ID,
-    CONF_NAME,
-    CONF_TYPE,
-)
-from homeassistant.core import HomeAssistant
+from custom_components.helper.const import DOMAIN
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.helper.const import DOMAIN
+from homeassistant.config_entries import SOURCE_USER
+from homeassistant.const import CONF_ENTITY_ID, CONF_NAME, CONF_TYPE
+from homeassistant.core import HomeAssistant
 
 pytest_plugins = "pytest_homeassistant_custom_component"
 

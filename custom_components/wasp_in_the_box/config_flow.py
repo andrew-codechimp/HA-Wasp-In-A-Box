@@ -6,26 +6,45 @@ from collections.abc import Mapping
 from typing import Any, cast
 
 import voluptuous as vol
-from homeassistant.components.input_number import DOMAIN as INPUT_NUMBER_DOMAIN
-from homeassistant.components.number import DOMAIN as NUMBER_DOMAIN
-from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
+
+from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
+from homeassistant.components.input_boolean import DOMAIN as INPUT_BOOLEAN_DOMAIN
 from homeassistant.helpers import selector
 from homeassistant.helpers.schema_config_entry_flow import (
     SchemaConfigFlowHandler,
     SchemaFlowFormStep,
 )
 
-from .const import CONF_ENTITY_ID, DOMAIN
-
+from .const import (
+    CONF_BOX_ID,
+    CONF_DELAY,
+    CONF_WASP_ID,
+    DEFAULT_DELAY,
+    DOMAIN,
+)
 
 OPTIONS_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_ENTITY_ID): selector.EntitySelector(
+        vol.Required(CONF_WASP_ID): selector.EntitySelector(
             selector.EntitySelectorConfig(
-                domain=[SENSOR_DOMAIN, NUMBER_DOMAIN, INPUT_NUMBER_DOMAIN],
+                domain=[BINARY_SENSOR_DOMAIN, INPUT_BOOLEAN_DOMAIN],
                 multiple=False,
             ),
-        )
+        ),
+        vol.Required(CONF_BOX_ID): selector.EntitySelector(
+            selector.EntitySelectorConfig(
+                domain=[BINARY_SENSOR_DOMAIN, INPUT_BOOLEAN_DOMAIN],
+                multiple=False,
+            ),
+        ),
+        vol.Optional(CONF_DELAY, default=DEFAULT_DELAY): selector.NumberSelector(
+            selector.NumberSelectorConfig(
+                min=1,
+                max=3600,
+                step=1,
+                mode=selector.NumberSelectorMode.BOX,
+            ),
+        ),
     }
 )
 
