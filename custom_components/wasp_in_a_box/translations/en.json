@@ -8,12 +8,14 @@
                     "name": "Name",
                     "wasp_id": "Motion sensor",
                     "box_id": "Door sensor",
-                    "delay": "Door delay"
+                    "delay": "Door delay",
+                    "immediate_on": "Immediate on"
                 },
                 "data_description": {
                     "wasp_id": "Select the motion sensor for the room.",
                     "box_id": "Select the door sensor for the room.",
-                    "delay": "Set the delay (in seconds) after the door is closed before determining if the room is occupied. If motion is detected when the delay expires, the helper turns to occupied.\nShould be set to about 10 seconds above how long your motion sensor stays active after motion is detected."
+                    "delay": "Set the delay (in seconds) after the door is closed before determining if the room is occupied. If motion is detected when the delay expires, the helper turns to occupied.\nShould be set to about 10 seconds above how long your motion sensor stays active after motion is detected.",
+                    "immediate_on": "When enabled, occupancy turns on immediately when motion is detected. When disabled, the door delay applies before turning on."
                 }
             }
         }
@@ -24,12 +26,14 @@
                 "data": {
                     "wasp_id": "Motion sensor",
                     "box_id": "Door sensor",
-                    "delay": "Door delay"
+                    "delay": "Door delay",
+                    "immediate_on": "Immediate on"
                 },
                 "data_description": {
                     "wasp_id": "Select the motion sensor for the room.",
                     "box_id": "Select the door sensor for the room.",
-                    "delay": "Set the delay (in seconds) after the door is closed before determining if the room is occupied. If motion is detected when the delay expires, the helper turns to occupied.\nShould be set to about 10 seconds above how long your motion sensor stays active after motion is detected."
+                    "delay": "Set the delay (in seconds) after the door is closed before determining if the room is occupied. If motion is detected when the delay expires, the helper turns to occupied.\nShould be set to about 10 seconds above how long your motion sensor stays active after motion is detected.",
+                    "immediate_on": "When enabled, occupancy turns on immediately when motion is detected. When disabled, the door delay applies before turning on."
                 }
             }
         }

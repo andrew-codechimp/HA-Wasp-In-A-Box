@@ -41,7 +41,6 @@ from .const import (
     CONF_BOX_ID,
     CONF_DELAY,
     CONF_WASP_ID,
-    DEFAULT_DELAY,
     DOMAIN,
     LOGGER,
     PLATFORMS,
@@ -113,7 +112,7 @@ async def async_setup_entry(
         config_entry.add_update_listener(config_entry_update_listener)
     )
 
-    delay = config_entry.options.get(CONF_DELAY, DEFAULT_DELAY)
+    delay = config_entry.options[CONF_DELAY]
 
     async_add_entities(
         [
@@ -140,7 +139,7 @@ async def async_setup_platform(
     """Set up the wasp_in_a_box sensor."""
     wasp_entity_id: str = config[CONF_WASP_ID]
     box_entity_id: str = config[CONF_BOX_ID]
-    delay: int = config.get(CONF_DELAY, DEFAULT_DELAY)
+    delay: int = config[CONF_DELAY]
     name: str | None = config.get(CONF_NAME)
     unique_id = config.get(CONF_UNIQUE_ID)
 
@@ -320,6 +319,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         """Handle the delay timer callback."""
         self._delay_timer = None
         LOGGER.debug("Delay expired, recalculating state")
+        self._motion_was_detected = False
         self.async_calculate_state()
 
     @callback

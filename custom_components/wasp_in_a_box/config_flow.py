@@ -18,8 +18,10 @@ from homeassistant.helpers.schema_config_entry_flow import (
 from .const import (
     CONF_BOX_ID,
     CONF_DELAY,
+    CONF_IMMEDIATE_ON,
     CONF_WASP_ID,
     DEFAULT_DELAY,
+    DEFAULT_IMMEDIATE_ON,
     DOMAIN,
 )
 
@@ -37,7 +39,7 @@ OPTIONS_SCHEMA = vol.Schema(
                 multiple=False,
             ),
         ),
-        vol.Optional(CONF_DELAY, default=DEFAULT_DELAY): selector.NumberSelector(
+        vol.Required(CONF_DELAY, default=DEFAULT_DELAY): selector.NumberSelector(
             selector.NumberSelectorConfig(
                 min=1,
                 max=600,
@@ -45,6 +47,9 @@ OPTIONS_SCHEMA = vol.Schema(
                 mode=selector.NumberSelectorMode.BOX,
             ),
         ),
+        vol.Required(
+            CONF_IMMEDIATE_ON, default=DEFAULT_IMMEDIATE_ON
+        ): selector.BooleanSelector(),
     }
 )
 

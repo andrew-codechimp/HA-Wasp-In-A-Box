@@ -25,5 +25,7 @@ PLATFORMS = [Platform.BINARY_SENSOR]
 CONF_WASP_ID = "wasp_id"
 CONF_BOX_ID = "box_id"
 CONF_DELAY = "delay"
+CONF_IMMEDIATE_ON = "immediate_on"
 
 DEFAULT_DELAY = 30
+DEFAULT_IMMEDIATE_ON = True
