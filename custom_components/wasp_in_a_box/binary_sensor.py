@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.components.sensor import SensorEntity, SensorStateClass
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_NAME,
@@ -139,10 +141,10 @@ async def async_setup_platform(
     )
 
 
-class WaspInABoxSensor(SensorEntity):
+class WaspInABoxSensor(BinarySensorEntity):
     """Representation of a wasp_in_a_box sensor."""
 
-    _attr_icon = ICON
+    _attr_device_class = BinarySensorDeviceClass.OCCUPANCY
     _attr_should_poll = False
     _state_had_real_change = False
     _attr_last_modified: str = dt_util.utcnow().isoformat()
@@ -198,13 +200,6 @@ class WaspInABoxSensor(SensorEntity):
             )
 
         if wasp_entry and box_entry:
-            state = await self.async_get_last_state()
-            if state is not None and state.state not in [
-                STATE_UNKNOWN,
-                STATE_UNAVAILABLE,
-            ]:
-                self._state = state.state
-
             # Replay current state of wasp entitiy
             state = self.hass.states.get(self._wasp_entity_id)
             state_event: Event[EventStateChangedData] = Event(
@@ -230,10 +225,19 @@ class WaspInABoxSensor(SensorEntity):
             self._async_box_state_listener(state_event)
 
     @property
-    def native_value(self) -> StateType | datetime:
-        """Return the state of the sensor."""
-        value: StateType | datetime = self._state
-        return value
+    def icon(self) -> str:
+        """Return the icon based on occupancy state."""
+        if self.is_on:
+            return "mdi:home"
+        return "mdi:home-outline"
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return true if occupancy is detected."""
+        if self._state in [STATE_UNKNOWN, STATE_UNAVAILABLE, None]:
+            return None
+        # Convert state to boolean - "on"/"home" means occupied
+        return self._state.lower() in ["on", "home", "true", "1"]
 
     @callback
     def _async_wasp_state_listener(self, event: Event[EventStateChangedData]) -> None:
@@ -250,10 +254,9 @@ class WaspInABoxSensor(SensorEntity):
             ]
         ):
             self._state = STATE_UNKNOWN
+            self.async_write_ha_state()
             return
 
-        if self._state != new_state.state:
-            self._attr_last_modified = dt_util.utcnow().isoformat(sep=" ")
         self._state = new_state.state
 
         self.async_write_ha_state()
@@ -273,10 +276,9 @@ class WaspInABoxSensor(SensorEntity):
             ]
         ):
             self._state = STATE_UNKNOWN
+            self.async_write_ha_state()
             return
 
-        if self._state != new_state.state:
-            self._attr_last_modified = dt_util.utcnow().isoformat(sep=" ")
         self._state = new_state.state
 
         self.async_write_ha_state()

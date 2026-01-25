@@ -92,6 +92,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             add_helper_config_entry_to_device=False,
             helper_config_entry_id=entry.entry_id,
             set_source_entity_id_or_uuid=set_wasp_entity_id_or_uuid,
+            source_device_id=None,
             source_entity_id_or_uuid=entry.options[CONF_WASP_ID],
             source_entity_removed=source_entity_removed,
         )
@@ -102,6 +103,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             add_helper_config_entry_to_device=False,
             helper_config_entry_id=entry.entry_id,
             set_source_entity_id_or_uuid=set_box_entity_id_or_uuid,
+            source_device_id=None,
             source_entity_id_or_uuid=entry.options[CONF_BOX_ID],
             source_entity_removed=source_entity_removed,
         )

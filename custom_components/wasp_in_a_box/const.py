@@ -20,7 +20,7 @@ VERSION = manifest_data.get("version")
 ISSUEURL = manifest_data.get("issue_tracker")
 CONFIG_VERSION = 1
 
-PLATFORMS = [Platform.SENSOR]
+PLATFORMS = [Platform.BINARY_SENSOR]
 
 CONF_WASP_ID = "wasp_id"
 CONF_BOX_ID = "box_id"
