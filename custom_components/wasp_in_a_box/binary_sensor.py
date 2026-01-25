@@ -225,13 +225,6 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._async_box_state_listener(state_event)
 
     @property
-    def icon(self) -> str:
-        """Return the icon based on occupancy state."""
-        if self.is_on:
-            return "mdi:home"
-        return "mdi:home-outline"
-
-    @property
     def is_on(self) -> bool | None:
         """Return true if occupancy is detected."""
         if self._state in [STATE_UNKNOWN, STATE_UNAVAILABLE, None]:
