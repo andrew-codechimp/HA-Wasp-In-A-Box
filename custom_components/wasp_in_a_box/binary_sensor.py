@@ -144,6 +144,8 @@ class WaspInABoxSensor(BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.OCCUPANCY
     _attr_should_poll = False
     _state_had_real_change = False
+    _wasp_state: str | None = None
+    _box_state: str | None = None
 
     def __init__(
         self,
@@ -242,13 +244,11 @@ class WaspInABoxSensor(BinarySensorEntity):
                 STATE_UNAVAILABLE,
             ]
         ):
-            self._state = STATE_UNKNOWN
-            self.async_write_ha_state()
-            return
+            self._wasp_state = STATE_UNKNOWN
+        else:
+            self._wasp_state = new_state.state
 
-        self._state = new_state.state
-
-        self.async_write_ha_state()
+        self.async_calculate_state()
 
     @callback
     def _async_box_state_listener(self, event: Event[EventStateChangedData]) -> None:
@@ -264,10 +264,40 @@ class WaspInABoxSensor(BinarySensorEntity):
                 STATE_UNAVAILABLE,
             ]
         ):
+            self._box_state = STATE_UNKNOWN
+        else:
+            self._box_state = new_state.state
+
+        self.async_calculate_state()
+
+    @callback
+    def async_calculate_state(self) -> None:
+        """Calculate the state based on wasp and box states."""
+        LOGGER.debug(
+            "Calculating state: wasp_state=%s, box_state=%s",
+            self._wasp_state,
+            self._box_state,
+        )
+
+        if STATE_UNKNOWN in {self._wasp_state, self._box_state}:
             self._state = STATE_UNKNOWN
             self.async_write_ha_state()
             return
 
-        self._state = new_state.state
+        if self._wasp_state and self._box_state:
+            if self._wasp_state.lower() in [
+                "on",
+                "home",
+                "true",
+                "1",
+            ] and self._box_state.lower() in [
+                "on",
+                "home",
+                "true",
+                "1",
+            ]:
+                self._state = "on"
+            else:
+                self._state = "off"
 
         self.async_write_ha_state()
