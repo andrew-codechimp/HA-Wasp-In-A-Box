@@ -39,8 +39,6 @@ from .const import (
     PLATFORMS,
 )
 
-ICON = "mdi:home-outline"
-
 
 async def config_entry_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Update listener, called when the config entry options are changed."""
