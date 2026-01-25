@@ -160,6 +160,7 @@ class WaspInABoxSensor(BinarySensorEntity):
     _wasp_state: str | None = None
     _box_state: str | None = None
     _delay_timer: CALLBACK_TYPE | None = None
+    _motion_was_detected: bool = False
 
     def __init__(  # noqa: PLR0913
         self,
@@ -338,16 +339,22 @@ class WaspInABoxSensor(BinarySensorEntity):
         if self._wasp_state and self._box_state:
             # Room is occupied when door is closed (box 'off') and motion detected (wasp 'on')
             door_closed = self._box_state.lower() in ["off", "closed", "false", "0"]
-            motion_detected = self._wasp_state.lower() in [
-                "on",
-                "detected",
-                "true",
-                "1",
-            ]
+            motion_detected = (
+                self._wasp_state.lower()
+                in [
+                    "on",
+                    "detected",
+                    "true",
+                    "1",
+                ]
+                or self._motion_was_detected
+            )
 
             if door_closed and motion_detected:
                 self._state = "on"
             else:
                 self._state = "off"
+
+            self._motion_was_detected = motion_detected
 
         self.async_write_ha_state()
