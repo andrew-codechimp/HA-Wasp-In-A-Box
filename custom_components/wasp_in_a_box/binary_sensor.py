@@ -17,13 +17,20 @@ from homeassistant.const import (
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
 )
-from homeassistant.core import Event, EventStateChangedData, HomeAssistant, callback
+from homeassistant.core import (
+    CALLBACK_TYPE,
+    Event,
+    EventStateChangedData,
+    HomeAssistant,
+    callback,
+)
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
     AddEntitiesCallback,
 )
 from homeassistant.helpers.event import (
+    async_call_later,
     async_track_entity_registry_updated_event,
     async_track_state_change_event,
 )
@@ -32,7 +39,9 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import (
     CONF_BOX_ID,
+    CONF_DELAY,
     CONF_WASP_ID,
+    DEFAULT_DELAY,
     DOMAIN,
     LOGGER,
     PLATFORMS,
@@ -104,12 +113,15 @@ async def async_setup_entry(
         config_entry.add_update_listener(config_entry_update_listener)
     )
 
+    delay = config_entry.options.get(CONF_DELAY, DEFAULT_DELAY)
+
     async_add_entities(
         [
             WaspInABoxSensor(
                 hass,
                 wasp_entity_id,
                 box_entity_id,
+                delay,
                 config_entry.title,
                 config_entry.entry_id,
             )
@@ -128,13 +140,14 @@ async def async_setup_platform(
     """Set up the wasp_in_a_box sensor."""
     wasp_entity_id: str = config[CONF_WASP_ID]
     box_entity_id: str = config[CONF_BOX_ID]
+    delay: int = config.get(CONF_DELAY, DEFAULT_DELAY)
     name: str | None = config.get(CONF_NAME)
     unique_id = config.get(CONF_UNIQUE_ID)
 
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
     async_add_entities(
-        [WaspInABoxSensor(hass, wasp_entity_id, box_entity_id, name, unique_id)]
+        [WaspInABoxSensor(hass, wasp_entity_id, box_entity_id, delay, name, unique_id)]
     )
 
 
@@ -146,12 +159,14 @@ class WaspInABoxSensor(BinarySensorEntity):
     _state_had_real_change = False
     _wasp_state: str | None = None
     _box_state: str | None = None
+    _delay_timer: CALLBACK_TYPE | None = None
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         hass: HomeAssistant,  # noqa: ARG002
         wasp_entity_id: str,
         box_entity_id: str,
+        delay: int,
         name: str | None,
         unique_id: str | None,
     ) -> None:
@@ -159,6 +174,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         self._attr_unique_id = unique_id
         self._wasp_entity_id = wasp_entity_id
         self._box_entity_id = box_entity_id
+        self._delay = delay
         self._attr_name = name
         self._state: Any = None
 
@@ -254,6 +270,7 @@ class WaspInABoxSensor(BinarySensorEntity):
     def _async_box_state_listener(self, event: Event[EventStateChangedData]) -> None:
         """Handle the box sensor state changes."""
         new_state = event.data["new_state"]
+        old_state = event.data.get("old_state")
 
         if (
             new_state is None
@@ -266,8 +283,42 @@ class WaspInABoxSensor(BinarySensorEntity):
         ):
             self._box_state = STATE_UNKNOWN
         else:
+            # Check if door just closed (transition from open to closed)
+            door_just_closed = (
+                old_state is not None
+                and old_state.state.lower() in ["on", "open", "true", "1"]
+                and new_state.state.lower() in ["off", "closed", "false", "0"]
+            )
+
             self._box_state = new_state.state
 
+            if door_just_closed:
+                # Cancel any existing timer
+                if self._delay_timer is not None:
+                    self._delay_timer()
+                    self._delay_timer = None
+
+                # Set a delay before recalculating state
+                LOGGER.debug(
+                    "Door closed, waiting %s seconds before recalculating", self._delay
+                )
+                self._delay_timer = async_call_later(
+                    self.hass, self._delay, self._async_delay_callback
+                )
+                return
+
+        # Cancel any pending timer if door opens or state becomes unknown
+        if self._delay_timer is not None:
+            self._delay_timer()
+            self._delay_timer = None
+
+        self.async_calculate_state()
+
+    @callback
+    def _async_delay_callback(self, _now) -> None:  # noqa: ANN001
+        """Handle the delay timer callback."""
+        self._delay_timer = None
+        LOGGER.debug("Delay expired, recalculating state")
         self.async_calculate_state()
 
     @callback
@@ -285,17 +336,16 @@ class WaspInABoxSensor(BinarySensorEntity):
             return
 
         if self._wasp_state and self._box_state:
-            if self._wasp_state.lower() in [
+            # Room is occupied when door is closed (box 'off') and motion detected (wasp 'on')
+            door_closed = self._box_state.lower() in ["off", "closed", "false", "0"]
+            motion_detected = self._wasp_state.lower() in [
                 "on",
-                "home",
+                "detected",
                 "true",
                 "1",
-            ] and self._box_state.lower() in [
-                "on",
-                "home",
-                "true",
-                "1",
-            ]:
+            ]
+
+            if door_closed and motion_detected:
                 self._state = "on"
             else:
                 self._state = "off"
