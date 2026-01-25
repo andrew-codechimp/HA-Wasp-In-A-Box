@@ -28,8 +28,7 @@ from homeassistant.helpers.event import (
     async_track_state_change_event,
 )
 from homeassistant.helpers.reload import async_setup_reload_service
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType, StateType
-from homeassistant.util import dt as dt_util
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import (
     CONF_BOX_ID,
@@ -145,7 +144,6 @@ class WaspInABoxSensor(BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.OCCUPANCY
     _attr_should_poll = False
     _state_had_real_change = False
-    _attr_last_modified: str = dt_util.utcnow().isoformat()
 
     def __init__(
         self,
