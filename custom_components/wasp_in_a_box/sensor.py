@@ -149,7 +149,7 @@ class WaspInABoxSensor(SensorEntity):
 
     def __init__(
         self,
-        hass: HomeAssistant,
+        hass: HomeAssistant,  # noqa: ARG002
         wasp_entity_id: str,
         box_entity_id: str,
         name: str | None,
