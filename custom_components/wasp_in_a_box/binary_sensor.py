@@ -40,6 +40,7 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from .const import (
     CONF_BOX_ID,
     CONF_DELAY,
+    CONF_IMMEDIATE_ON,
     CONF_WASP_ID,
     DOMAIN,
     LOGGER,
@@ -113,6 +114,7 @@ async def async_setup_entry(
     )
 
     delay = config_entry.options[CONF_DELAY]
+    immediate_on = config_entry.options[CONF_IMMEDIATE_ON]
 
     async_add_entities(
         [
@@ -121,6 +123,7 @@ async def async_setup_entry(
                 wasp_entity_id,
                 box_entity_id,
                 delay,
+                immediate_on,
                 config_entry.title,
                 config_entry.entry_id,
             )
@@ -167,6 +170,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         wasp_entity_id: str,
         box_entity_id: str,
         delay: int,
+        immediate_on: bool,  # noqa: FBT001
         name: str | None,
         unique_id: str | None,
     ) -> None:
@@ -175,6 +179,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         self._wasp_entity_id = wasp_entity_id
         self._box_entity_id = box_entity_id
         self._delay = delay
+        self._immediate_on = immediate_on
         self._attr_name = name
         self._state: Any = None
 
@@ -339,21 +344,24 @@ class WaspInABoxSensor(BinarySensorEntity):
         if self._wasp_state and self._box_state:
             # Room is occupied when door is closed (box 'off') and motion detected (wasp 'on')
             door_closed = self._box_state.lower() in ["off", "closed", "false", "0"]
-            motion_detected = (
-                self._wasp_state.lower()
-                in [
-                    "on",
-                    "detected",
-                    "true",
-                    "1",
-                ]
-                or self._motion_was_detected
-            )
+            motion_detected_now = self._wasp_state.lower() in [
+                "on",
+                "detected",
+                "true",
+                "1",
+            ]
+            motion_detected = motion_detected_now or self._motion_was_detected
 
             if door_closed and motion_detected:
                 self._state = "on"
             else:
                 self._state = "off"
+
+            if not door_closed and self._immediate_on:
+                self._state = "on"
+
+            if motion_detected_now and self._immediate_on:
+                self._state = "on"
 
             self._motion_was_detected = motion_detected
 
