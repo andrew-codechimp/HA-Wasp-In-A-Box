@@ -1,6 +1,6 @@
 {
-    "name": "Wasp in the Box",
-    "filename": "wasp_in_the_box.zip",
+    "name": "Wasp in a Box",
+    "filename": "wasp_in_a_box.zip",
     "hide_default_branch": true,
     "homeassistant": "2025.11.0",
     "zip_release": true

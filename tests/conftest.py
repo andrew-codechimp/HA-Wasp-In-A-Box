@@ -1,4 +1,4 @@
-"""Global fixtures for wasp_in_the_box integration."""
+"""Global fixtures for wasp_in_a_box integration."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ def auto_enable_custom_integrations(enable_custom_integrations):
 def mock_setup_entry() -> Generator[AsyncMock]:
     """Automatically path uuid generator."""
     with patch(
-        "custom_components.wasp_in_the_box.async_setup_entry",
+        "custom_components.wasp_in_a_box.async_setup_entry",
         return_value=True,
     ) as mock_setup_entry:
         yield mock_setup_entry
@@ -43,7 +43,7 @@ async def get_config_to_integration_load() -> dict[str, Any]:
     @pytest.mark.parametrize("get_config", [{...}])
     """
     return {
-        CONF_NAME: "My wasp_in_the_box sensor",
+        CONF_NAME: "My wasp_in_a_box sensor",
         CONF_ENTITY_ID: "sensor.test_monitored",
     }
 
@@ -52,7 +52,7 @@ async def get_config_to_integration_load() -> dict[str, Any]:
 async def load_integration(
     hass: HomeAssistant, get_config: dict[str, Any]
 ) -> MockConfigEntry:
-    """Set up the wasp_in_the_box integration in Home Assistant."""
+    """Set up the wasp_in_a_box integration in Home Assistant."""
     config_entry = MockConfigEntry(
         domain=DOMAIN,
         source=SOURCE_USER,

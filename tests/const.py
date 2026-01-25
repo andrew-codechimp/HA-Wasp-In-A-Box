@@ -1,4 +1,4 @@
-"""Constants for wasp_in_the_box tests."""
+"""Constants for wasp_in_a_box tests."""
 
 # Mock config data to be used across multiple tests
-DEFAULT_NAME = "WaspInTheBox"
+DEFAULT_NAME = "WaspInABox"

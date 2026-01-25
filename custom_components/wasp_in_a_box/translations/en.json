@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "title": "Add Wasp in the Box",
+                "title": "Add Wasp in a Box",
                 "description": "Create a sensor that does something.",
                 "data": {
                     "wasp_id": "Wasp entity",

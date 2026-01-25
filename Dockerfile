@@ -10,4 +10,4 @@ RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
 
 # Switch to vscode for all runtime operations
 USER vscode
-WORKDIR /workspace/HA-Wasp-In-The-Box
+WORKDIR /workspace/HA-Wasp-In-A-Box

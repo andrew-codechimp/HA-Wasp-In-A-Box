@@ -1,4 +1,4 @@
-"""Tests for wasp_in_the_box integration."""
+"""Tests for wasp_in_a_box integration."""
 
 import pytest
 

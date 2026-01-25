@@ -1,7 +1,7 @@
 [project]
-name = "HA-Wasp-In-The-Box"
+name = "HA-Wasp-In-A-Box"
 version = "0.0.0"
-description = "Wasp In The Box Helpers for Home Assistant"
+description = "Wasp in a Box Helpers for Home Assistant"
 authors = [{ email = "Andrew Jackson <andrew@codechimp.org>" }]
 maintainers = [{ email = "Andrew Jackson <andrew@codechimp.org>" }]
 
@@ -19,11 +19,11 @@ requires-python = "==3.13.2"
 dependencies = [] # Use dev for all dependencies
 
 [project.urls]
-documentation = "https://github.com/andrew-codechimp/HA-Wasp-In-The-Box"
-homepage = "https://github.com/andrew-codechimp/HA-Wasp-In-The-Box"
-repository = "https://github.com/andrew-codechimp/HA-Wasp-In-The-Box"
-"Bug Tracker" = "https://github.com/andrew-codechimp/HA-Wasp-In-The-Box/issues"
-Changelog = "https://github.com/andrew-codechimp/HA-Wasp-In-The-Box/releases"
+documentation = "https://github.com/andrew-codechimp/HA-Wasp-In-A-Box"
+homepage = "https://github.com/andrew-codechimp/HA-Wasp-In-A-Box"
+repository = "https://github.com/andrew-codechimp/HA-Wasp-In-A-Box"
+"Bug Tracker" = "https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/issues"
+Changelog = "https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/releases"
 
 [dependency-groups]
 dev = [
@@ -41,7 +41,7 @@ dev = [
 default-groups = ["dev"]
 [tool.ruff]
 target-version = "py313"
-src = ["custom_components/wasp_in_the_box", "tests"]
+src = ["custom_components/wasp_in_a_box", "tests"]
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -140,7 +140,7 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 # Files to check
-files = ["custom_components/wasp_in_the_box"]
+files = ["custom_components/wasp_in_a_box"]
 
 # Exclude patterns
 exclude = [

@@ -1,10 +1,10 @@
-"""Test wasp_in_the_box config flow."""
+"""Test wasp_in_a_box config flow."""
 
 from __future__ import annotations
 
 from unittest.mock import AsyncMock
 
-from custom_components.wasp_in_the_box.const import DOMAIN
+from custom_components.wasp_in_a_box.const import DOMAIN
 
 from homeassistant import config_entries
 from homeassistant.const import CONF_ENTITY_ID, CONF_NAME
@@ -27,7 +27,7 @@ async def test_form_sensor(hass: HomeAssistant, mock_setup_entry: AsyncMock) -> 
         result["flow_id"],
         {
             CONF_NAME: DEFAULT_NAME,
-            CONF_ENTITY_ID: "sensor.test_wasp_in_the_box",
+            CONF_ENTITY_ID: "sensor.test_wasp_in_a_box",
         },
     )
     await hass.async_block_till_done()
@@ -36,7 +36,7 @@ async def test_form_sensor(hass: HomeAssistant, mock_setup_entry: AsyncMock) -> 
     assert result["version"] == 1
     assert result["options"] == {
         CONF_NAME: DEFAULT_NAME,
-        CONF_ENTITY_ID: "sensor.test_wasp_in_the_box",
+        CONF_ENTITY_ID: "sensor.test_wasp_in_a_box",
     }
 
     assert len(mock_setup_entry.mock_calls) == 1

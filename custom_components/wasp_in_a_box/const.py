@@ -1,4 +1,4 @@
-"""Constants for wasp_in_the_box."""
+"""Constants for wasp_in_a_box."""
 
 import json
 from logging import Logger, getLogger

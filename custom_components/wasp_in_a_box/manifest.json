@@ -1,0 +1,14 @@
+{
+  "domain": "wasp_in_a_box",
+  "name": "Wasp in a Box",
+  "codeowners": [
+    "@andrew-codechimp"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/andrew-codechimp/HA-Wasp-In-A-Box",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/issues",
+  "requirements": [ ],
+  "version": "1.0.0-dev"
+}

@@ -1,5 +1,5 @@
 {
-  "name": "andrew-codechimp/wasp_in_the_box",
+  "name": "andrew-codechimp/wasp_in_a_box",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."

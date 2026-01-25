@@ -1,4 +1,4 @@
-"""Sensor platform for wasp_in_the_box."""
+"""Sensor platform for wasp_in_a_box."""
 
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ async def async_setup_entry(
     except vol.Invalid:
         # The entity is identified by an unknown entity registry ID
         LOGGER.error(
-            "Failed to setup wasp_in_the_box for unknown entity %s",
+            "Failed to setup wasp_in_a_box for unknown entity %s",
             config_entry.options[CONF_WASP_ID],
         )
         return False
@@ -95,7 +95,7 @@ async def async_setup_entry(
 
     async_add_entities(
         [
-            WaspInTheBoxSensor(
+            WaspInABoxSensor(
                 hass,
                 source_entity_id,
                 config_entry.title,
@@ -113,18 +113,18 @@ async def async_setup_platform(
     async_add_entities: AddEntitiesCallback,
     discovery_info: DiscoveryInfoType | None = None,
 ) -> None:
-    """Set up the wasp_in_the_box sensor."""
+    """Set up the wasp_in_a_box sensor."""
     source_entity_id: str = config[CONF_WASP_ID]
     name: str | None = config.get(CONF_NAME)
     unique_id = config.get(CONF_UNIQUE_ID)
 
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
-    async_add_entities([WaspInTheBoxSensor(hass, source_entity_id, name, unique_id)])
+    async_add_entities([WaspInABoxSensor(hass, source_entity_id, name, unique_id)])
 
 
-class WaspInTheBoxSensor(SensorEntity, RestoreEntity):
-    """Representation of a wasp_in_the_box sensor."""
+class WaspInABoxSensor(SensorEntity, RestoreEntity):
+    """Representation of a wasp_in_a_box sensor."""
 
     _attr_icon = ICON
     _attr_should_poll = False
@@ -163,7 +163,7 @@ class WaspInTheBoxSensor(SensorEntity, RestoreEntity):
             async_track_state_change_event(
                 self.hass,
                 self._source_entity_id,
-                self._async_wasp_in_the_box_sensor_state_listener,
+                self._async_wasp_in_a_box_sensor_state_listener,
             )
         )
 
@@ -194,7 +194,7 @@ class WaspInTheBoxSensor(SensorEntity, RestoreEntity):
                     "old_state": None,
                 },
             )
-            self._async_wasp_in_the_box_sensor_state_listener(state_event)
+            self._async_wasp_in_a_box_sensor_state_listener(state_event)
 
     @property
     def native_value(self) -> StateType | datetime:
@@ -212,7 +212,7 @@ class WaspInTheBoxSensor(SensorEntity, RestoreEntity):
         return attributes
 
     @callback
-    def _async_wasp_in_the_box_sensor_state_listener(
+    def _async_wasp_in_a_box_sensor_state_listener(
         self, event: Event[EventStateChangedData]
     ) -> None:
         """Handle the sensor state changes."""

@@ -823,7 +823,7 @@ wheels = [
 ]
 
 [[package]]
-name = "ha-wasp-in-the-box"
+name = "ha-Wasp-In-A-Box"
 version = "0.0.0"
 source = { virtual = "." }
 

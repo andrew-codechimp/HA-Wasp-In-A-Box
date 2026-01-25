@@ -9,7 +9,7 @@ default_config:
 logger:
   default: warning
   logs:
-    custom_components.wasp_in_the_box: debug
+    custom_components.wasp_in_a_box: debug
 
 debugpy:
   start: true

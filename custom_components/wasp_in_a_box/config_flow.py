@@ -1,4 +1,4 @@
-"""Config flow for wasp_in_the_box integration."""
+"""Config flow for wasp_in_a_box integration."""
 
 from __future__ import annotations
 

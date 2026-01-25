@@ -1,7 +1,7 @@
-"""Custom integration to provide wasp_in_the_box helpers for Home Assistant.
+"""Custom integration to provide wasp_in_a_box helpers for Home Assistant.
 
 For more details about this integration, please refer to
-https://github.com/andrew-codechimp/HA-Wasp-In-The-Box
+https://github.com/andrew-codechimp/HA-Wasp-In-A-Box
 """
 
 from __future__ import annotations
@@ -56,7 +56,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     except vol.Invalid:
         # The entity is identified by an unknown entity registry ID
         LOGGER.error(
-            "Failed to setup wasp_in_the_box for unknown entity %s",
+            "Failed to setup wasp_in_a_box for unknown entity %s",
             entry.options[CONF_WASP_ID],
         )
         return False
@@ -69,7 +69,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     async def source_entity_removed() -> None:
         # The source entity has been removed, we remove the config entry because
-        # wasp_in_the_box will not work without the source entity.
+        # wasp_in_a_box will not work without the source entity.
         await hass.config_entries.async_remove(entry.entry_id)
 
     entry.async_on_unload(

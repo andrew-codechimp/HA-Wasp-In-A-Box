@@ -1,4 +1,4 @@
-"""The test for the wasp_in_the_box sensor platform."""
+"""The test for the wasp_in_a_box sensor platform."""
 
 from homeassistant.components.sensor import ATTR_STATE_CLASS, SensorStateClass
 from homeassistant.core import HomeAssistant
@@ -20,7 +20,7 @@ async def test_helper_sensor(
 
     config = {
         "sensor": {
-            "platform": "wasp_in_the_box",
+            "platform": "wasp_in_a_box",
             "name": "test_helper_sensor",
             "entity_id": "sensor.test_source_sensor",
             "unique_id": "very_unique_id",
