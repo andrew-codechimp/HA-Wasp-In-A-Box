@@ -3,12 +3,17 @@
         "step": {
             "user": {
                 "title": "Add Wasp in a Box",
-                "description": "Create a sensor that does something.",
+                "description": "Create an occupancy sensor that handles periods of no motion.",
                 "data": {
-                    "wasp_id": "Wasp entity",
-                    "box_id": "Box entity",
-                    "delay": "Delay (seconds)",
-                    "name": "Name"
+                    "name": "Name",
+                    "wasp_id": "Motion sensor",
+                    "box_id": "Door sensor",
+                    "delay": "Door delay"
+                },
+                "data_description": {
+                    "wasp_id": "Select the motion sensor for the room.",
+                    "box_id": "Select the door sensor for the room.",
+                    "delay": "Set the delay (in seconds) after the door is closed before determining if the room is occupied. If motion is detected when the delay expires, the helper turns to occupied.\nShould be set to about 10 seconds above how long your motion sensor stays active after motion is detected."
                 }
             }
         }
@@ -17,9 +22,14 @@
         "step": {
             "init": {
                 "data": {
-                    "wasp_id": "Wasp entity",
-                    "box_id": "Box entity",
-                    "delay": "Delay (seconds)"
+                    "wasp_id": "Motion sensor",
+                    "box_id": "Door sensor",
+                    "delay": "Door delay"
+                },
+                "data_description": {
+                    "wasp_id": "Select the motion sensor for the room.",
+                    "box_id": "Select the door sensor for the room.",
+                    "delay": "Set the delay (in seconds) after the door is closed before determining if the room is occupied. If motion is detected when the delay expires, the helper turns to occupied.\nShould be set to about 10 seconds above how long your motion sensor stays active after motion is detected."
                 }
             }
         }

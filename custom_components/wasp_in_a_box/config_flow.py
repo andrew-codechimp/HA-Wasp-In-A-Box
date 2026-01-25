@@ -40,7 +40,7 @@ OPTIONS_SCHEMA = vol.Schema(
         vol.Optional(CONF_DELAY, default=DEFAULT_DELAY): selector.NumberSelector(
             selector.NumberSelectorConfig(
                 min=1,
-                max=3600,
+                max=600,
                 step=1,
                 mode=selector.NumberSelectorMode.BOX,
             ),
