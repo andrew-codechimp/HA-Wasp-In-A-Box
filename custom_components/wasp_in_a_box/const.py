@@ -27,5 +27,3 @@ CONF_BOX_ID = "box_id"
 CONF_DELAY = "delay"
 
 DEFAULT_DELAY = 30
-
-ATTR_LAST_MODIFIED = "last_modified"
