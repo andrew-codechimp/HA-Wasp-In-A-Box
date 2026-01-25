@@ -126,6 +126,31 @@
             }
         },
         {
+            "label": "Pytest: Run All Tests",
+            "type": "shell",
+            "command": "uv run pytest",
+            "problemMatcher": [
+                {
+                    "owner": "pytest",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+?):(\\d+):\\s*(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                }
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            }
+        },
+        {
             "label": "Setup Development Environment",
             "type": "shell",
             "command": "./scripts/setup",

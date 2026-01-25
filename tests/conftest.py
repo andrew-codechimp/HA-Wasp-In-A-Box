@@ -7,12 +7,21 @@ from typing import Any
 from unittest.mock import AsyncMock, patch
 
 import pytest
-from custom_components.helper.const import DOMAIN
+from custom_components.wasp_in_a_box.const import (
+    CONF_BOX_ID,
+    CONF_DELAY,
+    CONF_IMMEDIATE_ON,
+    CONF_WASP_ID,
+    DEFAULT_DELAY,
+    DEFAULT_IMMEDIATE_ON,
+    DOMAIN,
+)
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from homeassistant.config_entries import SOURCE_USER
-from homeassistant.const import CONF_ENTITY_ID, CONF_NAME, CONF_TYPE
+from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 
 pytest_plugins = "pytest_homeassistant_custom_component"
 
@@ -43,8 +52,10 @@ async def get_config_to_integration_load() -> dict[str, Any]:
     @pytest.mark.parametrize("get_config", [{...}])
     """
     return {
-        CONF_NAME: "My wasp_in_a_box sensor",
-        CONF_ENTITY_ID: "sensor.test_monitored",
+        CONF_WASP_ID: "binary_sensor.test_motion",
+        CONF_BOX_ID: "binary_sensor.test_door",
+        CONF_DELAY: DEFAULT_DELAY,
+        CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
     }
 
 
@@ -53,6 +64,23 @@ async def load_integration(
     hass: HomeAssistant, get_config: dict[str, Any]
 ) -> MockConfigEntry:
     """Set up the wasp_in_a_box integration in Home Assistant."""
+    # Create entity registry entries for the source sensors before setup
+    entity_registry = er.async_get(hass)
+
+    entity_registry.async_get_or_create(
+        "binary_sensor",
+        "test",
+        "motion",
+        suggested_object_id="test_motion",
+    )
+
+    entity_registry.async_get_or_create(
+        "binary_sensor",
+        "test",
+        "door",
+        suggested_object_id="test_door",
+    )
+
     config_entry = MockConfigEntry(
         domain=DOMAIN,
         source=SOURCE_USER,
@@ -66,8 +94,12 @@ async def load_integration(
     await hass.async_block_till_done()
 
     hass.states.async_set(
-        "sensor.test_monitored",
-        str("Test"),
+        "binary_sensor.test_motion",
+        "off",
+    )
+    hass.states.async_set(
+        "binary_sensor.test_door",
+        "off",
     )
     await hass.async_block_till_done()
 
