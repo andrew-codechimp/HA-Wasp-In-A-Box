@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock
 from custom_components.wasp_in_a_box.const import (
     CONF_BOX_ID,
     CONF_DOOR_CLOSED_DELAY,
+    CONF_DOOR_OPEN_TIMEOUT,
     CONF_IMMEDIATE_ON,
-    CONF_OPEN_DOOR_TIMEOUT,
     CONF_WASP_ID,
     DEFAULT_DOOR_CLOSED_DELAY,
     DEFAULT_IMMEDIATE_ON,
@@ -40,7 +40,7 @@ async def test_form_sensor(hass: HomeAssistant, mock_setup_entry: AsyncMock) -> 
             CONF_WASP_ID: "binary_sensor.test_motion",
             CONF_BOX_ID: "binary_sensor.test_door",
             CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
-            CONF_OPEN_DOOR_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
+            CONF_DOOR_OPEN_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
             CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
         },
     )
@@ -53,7 +53,7 @@ async def test_form_sensor(hass: HomeAssistant, mock_setup_entry: AsyncMock) -> 
         CONF_WASP_ID: "binary_sensor.test_motion",
         CONF_BOX_ID: "binary_sensor.test_door",
         CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
-        CONF_OPEN_DOOR_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
+        CONF_DOOR_OPEN_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
         CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
     }
 

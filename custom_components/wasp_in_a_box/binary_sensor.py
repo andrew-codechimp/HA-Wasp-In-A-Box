@@ -33,8 +33,8 @@ from homeassistant.helpers.event import (
 from .const import (
     CONF_BOX_ID,
     CONF_DOOR_CLOSED_DELAY,
+    CONF_DOOR_OPEN_TIMEOUT,
     CONF_IMMEDIATE_ON,
-    CONF_OPEN_DOOR_TIMEOUT,
     CONF_WASP_ID,
     LOGGER,
 )
@@ -106,7 +106,7 @@ async def async_setup_entry(
     )
 
     delay = config_entry.options[CONF_DOOR_CLOSED_DELAY]
-    timeout = config_entry.options[CONF_OPEN_DOOR_TIMEOUT]
+    timeout = config_entry.options[CONF_DOOR_OPEN_TIMEOUT]
     immediate_on = config_entry.options[CONF_IMMEDIATE_ON]
 
     async_add_entities(

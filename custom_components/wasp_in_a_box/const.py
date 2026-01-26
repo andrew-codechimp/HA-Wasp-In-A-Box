@@ -25,7 +25,7 @@ PLATFORMS = [Platform.BINARY_SENSOR]
 CONF_WASP_ID = "wasp_id"
 CONF_BOX_ID = "box_id"
 CONF_DOOR_CLOSED_DELAY = "door_closed_delay"
-CONF_OPEN_DOOR_TIMEOUT = "open_door_timeout"
+CONF_DOOR_OPEN_TIMEOUT = "door_open_timeout"
 CONF_IMMEDIATE_ON = "immediate_on"
 
 DEFAULT_DOOR_CLOSED_DELAY = 30
