@@ -8,7 +8,7 @@
                     "name": "Name",
                     "wasp_id": "Motion sensor",
                     "box_id": "Door sensor",
-                    "door_closed_delay": "Door delay",
+                    "door_closed_delay": "Door closed delay",
                     "open_door_timeout": "Open door timeout",
                     "immediate_on": "Immediate on"
                 },
@@ -28,7 +28,7 @@
                 "data": {
                     "wasp_id": "Motion sensor",
                     "box_id": "Door sensor",
-                    "door_closed_delay": "Door delay",
+                    "door_closed_delay": "Door closed delay",
                     "open_door_timeout": "Open door timeout",
                     "immediate_on": "Immediate on"
                 },
