@@ -8,7 +8,7 @@ from homeassistant.const import Platform
 
 LOGGER: Logger = getLogger(__package__)
 
-MIN_HA_VERSION = "2025.11"
+MIN_HA_VERSION = "2026.1"
 
 manifestfile = Path(__file__).parent / "manifest.json"
 with manifestfile.open(encoding="UTF-8") as json_file:
