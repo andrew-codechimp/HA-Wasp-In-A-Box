@@ -41,7 +41,7 @@ from .const import (
     CONF_BOX_ID,
     CONF_DELAY,
     CONF_IMMEDIATE_ON,
-    CONF_TIMEOUT,
+    CONF_OPEN_DOOR_TIMEOUT,
     CONF_WASP_ID,
     DOMAIN,
     LOGGER,
@@ -115,7 +115,7 @@ async def async_setup_entry(
     )
 
     delay = config_entry.options[CONF_DELAY]
-    timeout = config_entry.options[CONF_TIMEOUT]
+    timeout = config_entry.options[CONF_OPEN_DOOR_TIMEOUT]
     immediate_on = config_entry.options[CONF_IMMEDIATE_ON]
 
     async_add_entities(
@@ -136,37 +136,37 @@ async def async_setup_entry(
     return True
 
 
-async def async_setup_platform(
-    hass: HomeAssistant,
-    config: ConfigType,
-    async_add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,  # noqa: ARG001
-) -> None:
-    """Set up the wasp_in_a_box sensor."""
-    wasp_entity_id: str = config[CONF_WASP_ID]
-    box_entity_id: str = config[CONF_BOX_ID]
-    delay: int = config[CONF_DELAY]
-    timeout: int = config[CONF_TIMEOUT]
-    immediate_on: bool = config[CONF_IMMEDIATE_ON]
-    name: str | None = config.get(CONF_NAME)
-    unique_id = config.get(CONF_UNIQUE_ID)
+# async def async_setup_platform(
+#     hass: HomeAssistant,
+#     config: ConfigType,
+#     async_add_entities: AddEntitiesCallback,
+#     discovery_info: DiscoveryInfoType | None = None,  # noqa: ARG001
+# ) -> None:
+#     """Set up the wasp_in_a_box sensor."""
+#     wasp_entity_id: str = config[CONF_WASP_ID]
+#     box_entity_id: str = config[CONF_BOX_ID]
+#     delay: int = config[CONF_DELAY]
+#     timeout: int = config[CONF_OPEN_DOOR_TIMEOUT]
+#     immediate_on: bool = config[CONF_IMMEDIATE_ON]
+#     name: str | None = config.get(CONF_NAME)
+#     unique_id = config.get(CONF_UNIQUE_ID)
 
-    await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
+#     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
-    async_add_entities(
-        [
-            WaspInABoxSensor(
-                hass,
-                wasp_entity_id,
-                box_entity_id,
-                delay,
-                timeout,
-                immediate_on,
-                name,
-                unique_id,
-            )
-        ]
-    )
+#     async_add_entities(
+#         [
+#             WaspInABoxSensor(
+#                 hass,
+#                 wasp_entity_id,
+#                 box_entity_id,
+#                 delay,
+#                 timeout,
+#                 immediate_on,
+#                 name,
+#                 unique_id,
+#             )
+#         ]
+#     )
 
 
 class WaspInABoxSensor(BinarySensorEntity):

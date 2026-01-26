@@ -8,11 +8,11 @@ from custom_components.wasp_in_a_box.const import (
     CONF_BOX_ID,
     CONF_DELAY,
     CONF_IMMEDIATE_ON,
-    CONF_TIMEOUT,
+    CONF_OPEN_DOOR_TIMEOUT,
     CONF_WASP_ID,
     DEFAULT_DELAY,
     DEFAULT_IMMEDIATE_ON,
-    DEFAULT_TIMEOUT,
+    DEFAULT_OPEN_DOOR_TIMEOUT,
     DOMAIN,
 )
 
@@ -40,7 +40,7 @@ async def test_form_sensor(hass: HomeAssistant, mock_setup_entry: AsyncMock) -> 
             CONF_WASP_ID: "binary_sensor.test_motion",
             CONF_BOX_ID: "binary_sensor.test_door",
             CONF_DELAY: DEFAULT_DELAY,
-            CONF_TIMEOUT: DEFAULT_TIMEOUT,
+            CONF_OPEN_DOOR_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
             CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
         },
     )
@@ -53,7 +53,7 @@ async def test_form_sensor(hass: HomeAssistant, mock_setup_entry: AsyncMock) -> 
         CONF_WASP_ID: "binary_sensor.test_motion",
         CONF_BOX_ID: "binary_sensor.test_door",
         CONF_DELAY: DEFAULT_DELAY,
-        CONF_TIMEOUT: DEFAULT_TIMEOUT,
+        CONF_OPEN_DOOR_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
         CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
     }
 
