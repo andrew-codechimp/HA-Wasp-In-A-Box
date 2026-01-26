@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from datetime import datetime
 
 import voluptuous as vol
 
@@ -158,7 +158,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         self._timeout = timeout
         self._immediate_on = immediate_on
         self._attr_name = name
-        self._state: Any = None
+        self._state: str | None = None
 
     async def async_added_to_hass(self) -> None:
         """Handle added to Hass."""
@@ -197,28 +197,28 @@ class WaspInABoxSensor(BinarySensorEntity):
 
         if wasp_entry and box_entry:
             # Replay current state of wasp entitiy
-            state = self.hass.states.get(self._wasp_entity_id)
-            state_event: Event[EventStateChangedData] = Event(
+            wasp_state = self.hass.states.get(self._wasp_entity_id)
+            wasp_state_event: Event[EventStateChangedData] = Event(
                 "",
                 {
                     "entity_id": self._wasp_entity_id,
-                    "new_state": state,
+                    "new_state": wasp_state,
                     "old_state": None,
                 },
             )
-            self._async_wasp_state_listener(state_event)
+            self._async_wasp_state_listener(wasp_state_event)
 
             # Replay current state of box entitiy
-            state = self.hass.states.get(self._box_entity_id)
-            state_event: Event[EventStateChangedData] = Event(
+            box_state = self.hass.states.get(self._box_entity_id)
+            box_state_event: Event[EventStateChangedData] = Event(
                 "",
                 {
                     "entity_id": self._box_entity_id,
-                    "new_state": state,
+                    "new_state": box_state,
                     "old_state": None,
                 },
             )
-            self._async_box_state_listener(state_event)
+            self._async_box_state_listener(box_state_event)
 
     @property
     def is_on(self) -> bool | None:
@@ -311,7 +311,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         self.async_calculate_state()
 
     @callback
-    def _async_delay_callback(self, _now) -> None:  # noqa: ANN001
+    def _async_delay_callback(self, _now: datetime) -> None:
         """Handle the delay timer callback."""
         self._delay_timer = None
         LOGGER.debug("Delay expired, recalculating state")
@@ -319,7 +319,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         self.async_calculate_state()
 
     @callback
-    def _async_timeout_callback(self, _now) -> None:  # noqa: ANN001
+    def _async_timeout_callback(self, _now: datetime) -> None:
         """Handle the timeout timer callback."""
         self._timeout_timer = None
         LOGGER.debug("Timeout expired, recalculating state")

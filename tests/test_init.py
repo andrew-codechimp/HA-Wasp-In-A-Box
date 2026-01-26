@@ -49,7 +49,7 @@ async def test_setup(
     )
 
     # Wasp entity (motion sensor)
-    wasp_entity = entity_registry.async_get_or_create(
+    entity_registry.async_get_or_create(
         "binary_sensor",
         "test",
         "motion",
@@ -60,7 +60,7 @@ async def test_setup(
     assert entity_registry.async_get("binary_sensor.test_motion") is not None
 
     # Box entity (door sensor)
-    box_entity = entity_registry.async_get_or_create(
+    entity_registry.async_get_or_create(
         "binary_sensor",
         "test",
         "door",
