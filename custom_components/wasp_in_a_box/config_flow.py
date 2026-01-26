@@ -19,9 +19,11 @@ from .const import (
     CONF_BOX_ID,
     CONF_DELAY,
     CONF_IMMEDIATE_ON,
+    CONF_TIMEOUT,
     CONF_WASP_ID,
     DEFAULT_DELAY,
     DEFAULT_IMMEDIATE_ON,
+    DEFAULT_TIMEOUT,
     DOMAIN,
 )
 
@@ -43,6 +45,14 @@ OPTIONS_SCHEMA = vol.Schema(
             selector.NumberSelectorConfig(
                 min=1,
                 max=600,
+                step=1,
+                mode=selector.NumberSelectorMode.BOX,
+            ),
+        ),
+        vol.Required(CONF_TIMEOUT, default=DEFAULT_TIMEOUT): selector.NumberSelector(
+            selector.NumberSelectorConfig(
+                min=1,
+                max=3600,
                 step=1,
                 mode=selector.NumberSelectorMode.BOX,
             ),

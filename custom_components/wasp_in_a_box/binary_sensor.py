@@ -41,6 +41,7 @@ from .const import (
     CONF_BOX_ID,
     CONF_DELAY,
     CONF_IMMEDIATE_ON,
+    CONF_TIMEOUT,
     CONF_WASP_ID,
     DOMAIN,
     LOGGER,
@@ -114,6 +115,7 @@ async def async_setup_entry(
     )
 
     delay = config_entry.options[CONF_DELAY]
+    timeout = config_entry.options[CONF_TIMEOUT]
     immediate_on = config_entry.options[CONF_IMMEDIATE_ON]
 
     async_add_entities(
@@ -123,6 +125,7 @@ async def async_setup_entry(
                 wasp_entity_id,
                 box_entity_id,
                 delay,
+                timeout,
                 immediate_on,
                 config_entry.title,
                 config_entry.entry_id,
@@ -143,13 +146,26 @@ async def async_setup_platform(
     wasp_entity_id: str = config[CONF_WASP_ID]
     box_entity_id: str = config[CONF_BOX_ID]
     delay: int = config[CONF_DELAY]
+    timeout: int = config[CONF_TIMEOUT]
+    immediate_on: bool = config[CONF_IMMEDIATE_ON]
     name: str | None = config.get(CONF_NAME)
     unique_id = config.get(CONF_UNIQUE_ID)
 
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
     async_add_entities(
-        [WaspInABoxSensor(hass, wasp_entity_id, box_entity_id, delay, name, unique_id)]
+        [
+            WaspInABoxSensor(
+                hass,
+                wasp_entity_id,
+                box_entity_id,
+                delay,
+                timeout,
+                immediate_on,
+                name,
+                unique_id,
+            )
+        ]
     )
 
 
@@ -162,6 +178,7 @@ class WaspInABoxSensor(BinarySensorEntity):
     _wasp_state: str | None = None
     _box_state: str | None = None
     _delay_timer: CALLBACK_TYPE | None = None
+    _timeout_timer: CALLBACK_TYPE | None = None
     _motion_was_detected: bool = False
 
     def __init__(  # noqa: PLR0913
@@ -170,6 +187,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         wasp_entity_id: str,
         box_entity_id: str,
         delay: int,
+        timeout: int,
         immediate_on: bool,  # noqa: FBT001
         name: str | None,
         unique_id: str | None,
@@ -179,6 +197,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         self._wasp_entity_id = wasp_entity_id
         self._box_entity_id = box_entity_id
         self._delay = delay
+        self._timeout = timeout
         self._immediate_on = immediate_on
         self._attr_name = name
         self._state: Any = None
@@ -269,6 +288,20 @@ class WaspInABoxSensor(BinarySensorEntity):
         else:
             self._wasp_state = new_state.state
 
+        # Cancel any existing timeout timer
+        if self._timeout_timer is not None:
+            self._timeout_timer()
+            self._timeout_timer = None
+
+        if self._wasp_state == "off" and self._box_state == "on":
+            LOGGER.debug(
+                "Motion unoccupied and door open, waiting %s seconds before recalculating",
+                self._timeout,
+            )
+            self._timeout_timer = async_call_later(
+                self.hass, self._timeout, self._async_timeout_callback
+            )
+
         self.async_calculate_state()
 
     @callback
@@ -325,6 +358,16 @@ class WaspInABoxSensor(BinarySensorEntity):
         self._delay_timer = None
         LOGGER.debug("Delay expired, recalculating state")
         self._motion_was_detected = False
+        self.async_calculate_state()
+
+    @callback
+    def _async_timeout_callback(self, _now) -> None:  # noqa: ANN001
+        """Handle the timeout timer callback."""
+        self._timeout_timer = None
+        LOGGER.debug("Timeout expired, recalculating state")
+        self._box_state = "off"
+        self._motion_was_detected = False
+
         self.async_calculate_state()
 
     @callback

@@ -9,7 +9,37 @@
 
 Wasp in a Box Helpers for Home Assistant
 
-My helper description
+## Overview
+
+Wasp in a Box is an automation pattern for enclosed rooms (such as bathrooms) that helps determine reliable presence while a person remains inside, even if out of range of the motion senosr or being still.
+
+This helper is designed for single occupancy enclosed spaces where the door is shut when occupied, it will not work for multiple occupancy.
+
+### How it works
+
+This helper overcomes the limitations of PIR motion sensors, which cannot detect stationary occupants. It requires two sensors:
+
+- **Motion sensor** - Detects movement in the room
+- **Door sensor** - Monitors door open/closed state
+
+**Occupancy logic**
+1. Door opens, then closes
+2. Motion is detected
+3. Helper remains "occupied" until the door opens again, or the motion sensor has been unoccupied past the timeout period. 
+
+**Open door detection**
+If the door is open and the motion sensor has not had motion for the timeout period then the room is considered unoccupied.
+
+**Quick exit detection**
+If the door opens then closes and the motion sensor clears within the delay period, the room is considered unoccupied (e.g., someone quickly grabbing something without staying).
+
+### Instant on setting
+
+Control when the helper transitions to "occupied":
+
+- **On** - Helper becomes occupied immediately when motion is detected (ideal for lighting automation)
+- **Off** - Helper becomes occupied after the door closes, motion is detected, and the delay period expires (ideal for fan automation)
+
 
 _Please :star: this repo if you find it useful_
 
