@@ -249,7 +249,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         if self._state in [STATE_UNKNOWN, STATE_UNAVAILABLE, None]:
             return None
         # Convert state to boolean - "on"/"home" means occupied
-        return self._state.lower() in ["on", "home", "true", "1"]
+        return self._state == "on"
 
     @callback
     def _async_wasp_state_listener(self, event: Event[EventStateChangedData]) -> None:
@@ -291,8 +291,8 @@ class WaspInABoxSensor(BinarySensorEntity):
             # Check if door just closed (transition from open to closed)
             door_just_closed = (
                 old_state is not None
-                and old_state.state.lower() in ["on", "open", "true", "1"]
-                and new_state.state.lower() in ["off", "closed", "false", "0"]
+                and old_state.state == "on"
+                and new_state.state == "off"
             )
 
             self._box_state = new_state.state
@@ -343,13 +343,8 @@ class WaspInABoxSensor(BinarySensorEntity):
 
         if self._wasp_state and self._box_state:
             # Room is occupied when door is closed (box 'off') and motion detected (wasp 'on')
-            door_closed = self._box_state.lower() in ["off", "closed", "false", "0"]
-            motion_detected_now = self._wasp_state.lower() in [
-                "on",
-                "detected",
-                "true",
-                "1",
-            ]
+            door_closed = self._box_state == "off"
+            motion_detected_now = self._wasp_state == "on"
             motion_detected = motion_detected_now or self._motion_was_detected
 
             if door_closed and motion_detected:
