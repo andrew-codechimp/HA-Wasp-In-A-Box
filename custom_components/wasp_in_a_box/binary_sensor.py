@@ -12,8 +12,6 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    CONF_NAME,
-    CONF_UNIQUE_ID,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
 )
@@ -25,27 +23,20 @@ from homeassistant.core import (
     callback,
 )
 from homeassistant.helpers import entity_registry as er
-from homeassistant.helpers.entity_platform import (
-    AddConfigEntryEntitiesCallback,
-    AddEntitiesCallback,
-)
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.event import (
     async_call_later,
     async_track_entity_registry_updated_event,
     async_track_state_change_event,
 )
-from homeassistant.helpers.reload import async_setup_reload_service
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import (
     CONF_BOX_ID,
-    CONF_DELAY,
+    CONF_DOOR_CLOSED_DELAY,
     CONF_IMMEDIATE_ON,
     CONF_OPEN_DOOR_TIMEOUT,
     CONF_WASP_ID,
-    DOMAIN,
     LOGGER,
-    PLATFORMS,
 )
 
 
@@ -114,7 +105,7 @@ async def async_setup_entry(
         config_entry.add_update_listener(config_entry_update_listener)
     )
 
-    delay = config_entry.options[CONF_DELAY]
+    delay = config_entry.options[CONF_DOOR_CLOSED_DELAY]
     timeout = config_entry.options[CONF_OPEN_DOOR_TIMEOUT]
     immediate_on = config_entry.options[CONF_IMMEDIATE_ON]
 
@@ -134,39 +125,6 @@ async def async_setup_entry(
     )
 
     return True
-
-
-# async def async_setup_platform(
-#     hass: HomeAssistant,
-#     config: ConfigType,
-#     async_add_entities: AddEntitiesCallback,
-#     discovery_info: DiscoveryInfoType | None = None,  # noqa: ARG001
-# ) -> None:
-#     """Set up the wasp_in_a_box sensor."""
-#     wasp_entity_id: str = config[CONF_WASP_ID]
-#     box_entity_id: str = config[CONF_BOX_ID]
-#     delay: int = config[CONF_DELAY]
-#     timeout: int = config[CONF_OPEN_DOOR_TIMEOUT]
-#     immediate_on: bool = config[CONF_IMMEDIATE_ON]
-#     name: str | None = config.get(CONF_NAME)
-#     unique_id = config.get(CONF_UNIQUE_ID)
-
-#     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
-
-#     async_add_entities(
-#         [
-#             WaspInABoxSensor(
-#                 hass,
-#                 wasp_entity_id,
-#                 box_entity_id,
-#                 delay,
-#                 timeout,
-#                 immediate_on,
-#                 name,
-#                 unique_id,
-#             )
-#         ]
-#     )
 
 
 class WaspInABoxSensor(BinarySensorEntity):

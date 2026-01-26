@@ -17,11 +17,11 @@ from homeassistant.helpers.schema_config_entry_flow import (
 
 from .const import (
     CONF_BOX_ID,
-    CONF_DELAY,
+    CONF_DOOR_CLOSED_DELAY,
     CONF_IMMEDIATE_ON,
     CONF_OPEN_DOOR_TIMEOUT,
     CONF_WASP_ID,
-    DEFAULT_DELAY,
+    DEFAULT_DOOR_CLOSED_DELAY,
     DEFAULT_IMMEDIATE_ON,
     DEFAULT_OPEN_DOOR_TIMEOUT,
     DOMAIN,
@@ -41,7 +41,9 @@ OPTIONS_SCHEMA = vol.Schema(
                 multiple=False,
             ),
         ),
-        vol.Required(CONF_DELAY, default=DEFAULT_DELAY): selector.NumberSelector(
+        vol.Required(
+            CONF_DOOR_CLOSED_DELAY, default=DEFAULT_DOOR_CLOSED_DELAY
+        ): selector.NumberSelector(
             selector.NumberSelectorConfig(
                 min=1,
                 max=600,

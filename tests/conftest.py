@@ -9,17 +9,16 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from custom_components.wasp_in_a_box.const import (
     CONF_BOX_ID,
-    CONF_DELAY,
+    CONF_DOOR_CLOSED_DELAY,
     CONF_IMMEDIATE_ON,
     CONF_WASP_ID,
-    DEFAULT_DELAY,
+    DEFAULT_DOOR_CLOSED_DELAY,
     DEFAULT_IMMEDIATE_ON,
     DOMAIN,
 )
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from homeassistant.config_entries import SOURCE_USER
-from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
@@ -29,9 +28,9 @@ pytest_plugins = "pytest_homeassistant_custom_component"
 # This fixture enables loading custom integrations in all tests.
 # Remove to enable selective use of this fixture
 @pytest.fixture(autouse=True)
-def auto_enable_custom_integrations(enable_custom_integrations):
+def auto_enable_custom_integrations(enable_custom_integrations):  # noqa: ANN001, ANN201, ARG001
     """Enable loading custom integrations."""
-    yield
+    yield  # noqa: PT022
 
 
 @pytest.fixture
@@ -54,7 +53,7 @@ async def get_config_to_integration_load() -> dict[str, Any]:
     return {
         CONF_WASP_ID: "binary_sensor.test_motion",
         CONF_BOX_ID: "binary_sensor.test_door",
-        CONF_DELAY: DEFAULT_DELAY,
+        CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
         CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
     }
 
