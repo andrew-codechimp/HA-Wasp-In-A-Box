@@ -135,8 +135,8 @@ class WaspInABoxSensor(BinarySensorEntity):
     _state_had_real_change = False
     _wasp_state: str | None = None
     _box_state: str | None = None
-    _delay_timer: CALLBACK_TYPE | None = None
-    _timeout_timer: CALLBACK_TYPE | None = None
+    _door_closed_delay_timer: CALLBACK_TYPE | None = None
+    _door_open_timeout_timer: CALLBACK_TYPE | None = None
     _motion_was_detected: bool = False
 
     def __init__(  # noqa: PLR0913
@@ -247,17 +247,17 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._wasp_state = new_state.state
 
         # Cancel any existing timeout timer
-        if self._timeout_timer is not None:
-            self._timeout_timer()
-            self._timeout_timer = None
+        if self._door_open_timeout_timer is not None:
+            self._door_open_timeout_timer()
+            self._door_open_timeout_timer = None
 
         if self._wasp_state == "off" and self._box_state == "on":
             LOGGER.debug(
                 "Motion unoccupied and door open, waiting %s seconds before recalculating",
                 self._timeout,
             )
-            self._timeout_timer = async_call_later(
-                self.hass, self._timeout, self._async_timeout_callback
+            self._door_open_timeout_timer = async_call_later(
+                self.hass, self._timeout, self._async_door_open_timeout_callback
             )
 
         self.async_calculate_state()
@@ -290,38 +290,38 @@ class WaspInABoxSensor(BinarySensorEntity):
 
             if door_just_closed:
                 # Cancel any existing timer
-                if self._delay_timer is not None:
-                    self._delay_timer()
-                    self._delay_timer = None
+                if self._door_closed_delay_timer is not None:
+                    self._door_closed_delay_timer()
+                    self._door_closed_delay_timer = None
 
                 # Set a delay before recalculating state
                 LOGGER.debug(
                     "Door closed, waiting %s seconds before recalculating", self._delay
                 )
-                self._delay_timer = async_call_later(
-                    self.hass, self._delay, self._async_delay_callback
+                self._door_closed_delay_timer = async_call_later(
+                    self.hass, self._delay, self._async_door_closed_delay_callback
                 )
                 return
 
         # Cancel any pending timer if door opens or state becomes unknown
-        if self._delay_timer is not None:
-            self._delay_timer()
-            self._delay_timer = None
+        if self._door_closed_delay_timer is not None:
+            self._door_closed_delay_timer()
+            self._door_closed_delay_timer = None
 
         self.async_calculate_state()
 
     @callback
-    def _async_delay_callback(self, _now: datetime) -> None:
+    def _async_door_closed_delay_callback(self, _now: datetime) -> None:
         """Handle the delay timer callback."""
-        self._delay_timer = None
+        self._door_closed_delay_timer = None
         LOGGER.debug("Delay expired, recalculating state")
         self._motion_was_detected = False
         self.async_calculate_state()
 
     @callback
-    def _async_timeout_callback(self, _now: datetime) -> None:
+    def _async_door_open_timeout_callback(self, _now: datetime) -> None:
         """Handle the timeout timer callback."""
-        self._timeout_timer = None
+        self._door_open_timeout_timer = None
         LOGGER.debug("Timeout expired, recalculating state")
         self._box_state = "off"
         self._motion_was_detected = False
