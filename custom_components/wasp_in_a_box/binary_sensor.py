@@ -141,12 +141,12 @@ class WaspInABoxSensor(BinarySensorEntity):
 
     def __init__(  # noqa: PLR0913
         self,
-        hass: HomeAssistant,  # noqa: ARG002
+        hass: HomeAssistant,
         wasp_entity_id: str,
         box_entity_id: str,
         delay: int,
         timeout: int,
-        immediate_on: bool,  # noqa: FBT001
+        immediate_on: bool,
         name: str | None,
         unique_id: str | None,
     ) -> None:

@@ -29,8 +29,8 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 async def async_setup(
-    hass: HomeAssistant,  # noqa: ARG001
-    config: ConfigType,  # noqa: ARG001
+    hass: HomeAssistant,
+    config: ConfigType,
 ) -> bool:
     """Integration setup."""
 

@@ -81,8 +81,11 @@ ignore = [
   "RUF012", # Broken rule in some cases
 
   # Project preference
+  "ARG001",  # Unused function argument
+  "ARG002",  # Unused method argument
   "EM101",   # Exception must not use a string literal
   "ERA001",  # Found commented-out code
+  "FBT001", # Boolean argument
   "RUF001", # String contains ambiguous character
   "S101",   # Use of assert detected
   "TC001",  # Move application import into type checking
