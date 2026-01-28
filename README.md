@@ -28,10 +28,10 @@ This helper overcomes the limitations of PIR motion sensors, which cannot detect
 3. Helper remains "occupied" until the door opens again, or the motion sensor has been unoccupied past the timeout period. 
 
 **Open door detection**
-If the door is open and the motion sensor has not had motion for the timeout period then the room is considered unoccupied.
+If the door is open and the motion sensor has not had motion for the door open timeout period then the room is considered unoccupied.
 
 **Quick exit detection**
-If the door opens then closes and the motion sensor clears within the delay period, the room is considered unoccupied (e.g., someone quickly grabbing something without staying).
+If the door opens then closes and the motion sensor clears within the door closed delay period, the room is considered unoccupied (e.g., someone quickly grabbing something without staying).
 
 ### Instant on setting
 
@@ -69,8 +69,6 @@ Installation via HACS is recommended, but a manual setup is supported.
 1. In the HA UI go to "Configuration" -> "Devices & services" -> "Helpers" click "+" and select "Wasp in a Box"
 
 </details>
-
-## Usage
 
 A new WaspInABox helper will be available within Settings/Helpers or click the My link to jump straight there
 
