@@ -138,6 +138,8 @@ class WaspInABoxSensor(BinarySensorEntity):
     _door_closed_delay_timer: CALLBACK_TYPE | None = None
     _door_open_timeout_timer: CALLBACK_TYPE | None = None
     _motion_was_detected: bool = False
+    _awaiting_first_wasp_state: bool = True
+    _awaiting_first_box_state: bool = True
 
     def __init__(  # noqa: PLR0913
         self,
@@ -243,6 +245,13 @@ class WaspInABoxSensor(BinarySensorEntity):
     def _async_wasp_state_listener(self, event: Event[EventStateChangedData]) -> None:
         """Handle the wasp sensor state changes."""
         new_state = event.data["new_state"]
+        old_state = event.data.get("old_state")
+
+        if self._awaiting_first_wasp_state:
+            self._awaiting_first_wasp_state = False
+            return
+
+        LOGGER.debug("Wasp state changed from %s to %s", old_state, new_state)
 
         if (
             new_state is None
@@ -262,7 +271,9 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._door_open_timeout_timer()
             self._door_open_timeout_timer = None
 
-        if self._wasp_state == "off" and self._box_state == "on":
+        if self._wasp_state == "off" and (
+            self._box_state is None or self._box_state == "on"
+        ):
             LOGGER.debug(
                 "Motion unoccupied and door open, waiting %s seconds before recalculating",
                 self._timeout,
@@ -278,6 +289,12 @@ class WaspInABoxSensor(BinarySensorEntity):
         """Handle the box sensor state changes."""
         new_state = event.data["new_state"]
         old_state = event.data.get("old_state")
+
+        if self._awaiting_first_box_state:
+            self._awaiting_first_box_state = False
+            return
+
+        LOGGER.debug("Box state changed from %s to %s", old_state, new_state)
 
         if (
             new_state is None
@@ -347,12 +364,12 @@ class WaspInABoxSensor(BinarySensorEntity):
     def _async_door_open_timeout_callback(self, _now: datetime) -> None:
         """Handle the timeout timer callback."""
         self._door_open_timeout_timer = None
-        LOGGER.debug("Timeout expired, recalculating state")
+        LOGGER.debug("Timeout expired, setting state to off")
         self._wasp_state = "off"
-        self._box_state = "off"
         self._motion_was_detected = False
 
-        self.async_calculate_state()
+        self._state = "off"
+        self.async_write_ha_state()
 
     @callback
     def async_calculate_state(self) -> None:
@@ -363,28 +380,29 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._box_state,
         )
 
-        if STATE_UNKNOWN in {self._wasp_state, self._box_state}:
+        if self._wasp_state == STATE_UNKNOWN:
             self._state = STATE_UNKNOWN
             self.async_write_ha_state()
             return
 
-        if self._wasp_state and self._box_state:
-            # Room is occupied when door is closed (box 'off') and motion detected (wasp 'on')
-            door_closed = self._box_state == "off"
-            motion_detected_now = self._wasp_state == "on"
-            motion_detected = motion_detected_now or self._motion_was_detected
+        # Room is occupied when door is closed (box 'off') and motion detected (wasp 'on')
+        door_closed = (
+            False if self._box_state == STATE_UNKNOWN else self._box_state == "off"
+        )
+        motion_detected_now = self._wasp_state == "on"
+        motion_detected = motion_detected_now or self._motion_was_detected
 
-            if door_closed and motion_detected:
-                self._state = "on"
-            else:
-                self._state = "off"
+        if door_closed and motion_detected:
+            self._state = "on"
+        else:
+            self._state = "off"
 
-            if not door_closed and self._immediate_on:
-                self._state = "on"
+        if not door_closed and self._immediate_on:
+            self._state = "on"
 
-            if motion_detected_now and self._immediate_on:
-                self._state = "on"
+        if motion_detected_now and self._immediate_on:
+            self._state = "on"
 
-            self._motion_was_detected = motion_detected
+        self._motion_was_detected = motion_detected
 
         self.async_write_ha_state()
