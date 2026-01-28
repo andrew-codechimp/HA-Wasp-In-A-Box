@@ -220,6 +220,17 @@ class WaspInABoxSensor(BinarySensorEntity):
             )
             self._async_box_state_listener(box_state_event)
 
+    async def async_will_remove_from_hass(self) -> None:
+        """Handle removal from hass."""
+        # Cancel any pending timers to prevent callbacks after removal
+        if self._door_closed_delay_timer is not None:
+            self._door_closed_delay_timer()
+            self._door_closed_delay_timer = None
+
+        if self._door_open_timeout_timer is not None:
+            self._door_open_timeout_timer()
+            self._door_open_timeout_timer = None
+
     @property
     def is_on(self) -> bool | None:
         """Return true if occupancy is detected."""
