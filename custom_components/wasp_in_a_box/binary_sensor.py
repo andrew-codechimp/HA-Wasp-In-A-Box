@@ -334,6 +334,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         """Handle the timeout timer callback."""
         self._door_open_timeout_timer = None
         LOGGER.debug("Timeout expired, recalculating state")
+        self._wasp_state = "off"
         self._box_state = "off"
         self._motion_was_detected = False
 
