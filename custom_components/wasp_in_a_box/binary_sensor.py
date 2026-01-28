@@ -319,6 +319,20 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._door_closed_delay_timer()
             self._door_closed_delay_timer = None
 
+        # Cancel any existing timeout timer
+        if self._door_open_timeout_timer is not None:
+            self._door_open_timeout_timer()
+            self._door_open_timeout_timer = None
+
+        if self._wasp_state == "off" and self._box_state == "on":
+            LOGGER.debug(
+                "Motion unoccupied and door open, waiting %s seconds before recalculating",
+                self._timeout,
+            )
+            self._door_open_timeout_timer = async_call_later(
+                self.hass, self._timeout, self._async_door_open_timeout_callback
+            )
+
         self.async_calculate_state()
 
     @callback
