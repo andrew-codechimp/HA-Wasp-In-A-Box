@@ -133,8 +133,9 @@ class WaspInABoxSensor(BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.OCCUPANCY
     _attr_should_poll = False
     _state_had_real_change = False
-    _wasp_state: str | None = None
-    _box_state: str | None = None
+    _wasp_state: str = STATE_UNKNOWN
+    _old_wasp_state: str = STATE_UNKNOWN
+    _box_state: str = STATE_UNKNOWN
     _door_closed_delay_timer: CALLBACK_TYPE | None = None
     _door_open_timeout_timer: CALLBACK_TYPE | None = None
     _motion_was_detected: bool = False
@@ -252,6 +253,16 @@ class WaspInABoxSensor(BinarySensorEntity):
             return
 
         LOGGER.debug("Wasp state changed from %s to %s", old_state, new_state)
+
+        if old_state is None:
+            self._old_wasp_state = STATE_UNKNOWN
+        elif old_state.state not in (
+            STATE_UNAVAILABLE,
+            STATE_UNKNOWN,
+        ):
+            self._old_wasp_state = old_state.state
+        else:
+            self._old_wasp_state = STATE_UNKNOWN
 
         if (
             new_state is None
@@ -397,8 +408,14 @@ class WaspInABoxSensor(BinarySensorEntity):
         else:
             self._state = "off"
 
-        if not door_closed and self._immediate_on:
+        if (
+            not door_closed
+            and self._immediate_on
+            and self._old_wasp_state != STATE_UNKNOWN
+        ):
             self._state = "on"
+        else:
+            self._state = "off"
 
         if motion_detected_now and self._immediate_on:
             self._state = "on"
