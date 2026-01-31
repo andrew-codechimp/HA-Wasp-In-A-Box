@@ -33,12 +33,12 @@ If the door is open and the motion sensor has not had motion for the door open t
 **Quick exit detection**
 If the door opens then closes and the motion sensor clears within the door closed delay period, the room is considered unoccupied (e.g., someone quickly grabbing something without staying).
 
-### Instant on setting
+### Immediate on setting
 
 Control when the helper transitions to "occupied":
 
-- **On** - Helper becomes occupied immediately when motion is detected (ideal for lighting automation)
-- **Off** - Helper becomes occupied after the door closes, motion is detected, and the delay period expires (ideal for fan automation)
+- **On** - Helper becomes occupied immediately when the door is opened or motion is detected (good for lighting automation)
+- **Off** - Helper becomes occupied after the door closes, motion is detected, and the delay period expires (good for fan automation)
 
 
 _Please :star: this repo if you find it useful_
