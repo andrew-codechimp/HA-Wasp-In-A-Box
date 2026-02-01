@@ -11,9 +11,9 @@ from awesomeversion.awesomeversion import AwesomeVersion
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import __version__ as HA_VERSION  # noqa: N812
-from homeassistant.core import HomeAssistant
+from homeassistant.core import Event, HomeAssistant
 from homeassistant.helpers import config_validation as cv, entity_registry as er
-from homeassistant.helpers.helper_integration import async_handle_source_entity_changes
+from homeassistant.helpers.event import async_track_entity_registry_updated_event
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
@@ -51,7 +51,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     entity_registry = er.async_get(hass)
     try:
-        er.async_validate_entity_id(entity_registry, entry.options[CONF_WASP_ID])
+        wasp_entity_id = er.async_validate_entity_id(
+            entity_registry, entry.options[CONF_WASP_ID]
+        )
     except vol.Invalid:
         # The entity is identified by an unknown entity registry ID
         LOGGER.error(
@@ -60,7 +62,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
         return False
     try:
-        er.async_validate_entity_id(entity_registry, entry.options[CONF_BOX_ID])
+        box_entity_id = er.async_validate_entity_id(
+            entity_registry, entry.options[CONF_BOX_ID]
+        )
     except vol.Invalid:
         # The entity is identified by an unknown entity registry ID
         LOGGER.error(
@@ -69,45 +73,32 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
         return False
 
-    def set_wasp_entity_id_or_uuid(entity_id: str) -> None:
-        hass.config_entries.async_update_entry(
-            entry,
-            options={**entry.options, CONF_WASP_ID: entity_id},
-        )
+    async def async_registry_updated(
+        event: Event[er.EventEntityRegistryUpdatedData],
+    ) -> None:
+        """Handle entity registry update."""
+        data = event.data
+        if data["action"] == "remove":
+            await hass.config_entries.async_remove(entry.entry_id)
 
-    def set_box_entity_id_or_uuid(entity_id: str) -> None:
-        hass.config_entries.async_update_entry(
-            entry,
-            options={**entry.options, CONF_BOX_ID: entity_id},
-        )
+        if data["action"] != "update":
+            return
 
-    async def source_entity_removed() -> None:
-        # The source entity has been removed, we remove the config entry because
-        # wasp_in_a_box will not work without the source entity.
-        await hass.config_entries.async_remove(entry.entry_id)
+        if "entity_id" in data["changes"]:
+            # Entity_id changed, reload the config entry
+            await hass.config_entries.async_reload(entry.entry_id)
 
     entry.async_on_unload(
-        async_handle_source_entity_changes(
-            hass,
-            add_helper_config_entry_to_device=False,
-            helper_config_entry_id=entry.entry_id,
-            set_source_entity_id_or_uuid=set_wasp_entity_id_or_uuid,
-            source_device_id=None,
-            source_entity_id_or_uuid=entry.options[CONF_WASP_ID],
-            source_entity_removed=source_entity_removed,
+        async_track_entity_registry_updated_event(
+            hass, wasp_entity_id, async_registry_updated
         )
     )
     entry.async_on_unload(
-        async_handle_source_entity_changes(
-            hass,
-            add_helper_config_entry_to_device=False,
-            helper_config_entry_id=entry.entry_id,
-            set_source_entity_id_or_uuid=set_box_entity_id_or_uuid,
-            source_device_id=None,
-            source_entity_id_or_uuid=entry.options[CONF_BOX_ID],
-            source_entity_removed=source_entity_removed,
+        async_track_entity_registry_updated_event(
+            hass, box_entity_id, async_registry_updated
         )
     )
+
     entry.async_on_unload(entry.add_update_listener(config_entry_update_listener))
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
