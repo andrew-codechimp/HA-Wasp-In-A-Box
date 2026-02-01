@@ -356,7 +356,7 @@ class WaspInABoxSensor(BinarySensorEntity):
     def _async_door_closed_delay_callback(self, _now: datetime) -> None:
         """Handle the delay timer callback."""
         self._door_closed_delay_timer = None
-        LOGGER.debug("Delay expired, recalculating state")
+        LOGGER.debug("Door closed delay expired, recalculating state")
         self._motion_was_detected = False
         self.async_calculate_state()
 
@@ -364,7 +364,7 @@ class WaspInABoxSensor(BinarySensorEntity):
     def _async_door_open_timeout_callback(self, _now: datetime) -> None:
         """Handle the timeout timer callback."""
         self._door_open_timeout_timer = None
-        LOGGER.debug("Timeout expired, setting state to off")
+        LOGGER.debug("Door open timeout expired, setting state to off")
         self._wasp_state = "off"
         self._motion_was_detected = False
 
@@ -375,9 +375,10 @@ class WaspInABoxSensor(BinarySensorEntity):
     def async_calculate_state(self) -> None:
         """Calculate the state based on wasp and box states."""
         LOGGER.debug(
-            "Calculating state: wasp_state=%s, box_state=%s",
+            "Calculating state: wasp_state=%s, box_state=%s, motion_was_detected=%s",
             self._wasp_state,
             self._box_state,
+            self._motion_was_detected,
         )
 
         if self._wasp_state == STATE_UNKNOWN:
