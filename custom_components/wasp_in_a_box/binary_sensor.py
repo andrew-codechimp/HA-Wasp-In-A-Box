@@ -42,7 +42,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> bool:
-    """Initialize periodic min/max config entry."""
+    """Initialize config entry."""
 
     wasp_entity_id: str = config_entry.options[CONF_WASP_ID]
     box_entity_id: str = config_entry.options[CONF_BOX_ID]
