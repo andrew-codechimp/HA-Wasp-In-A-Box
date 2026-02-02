@@ -9,6 +9,7 @@ import voluptuous as vol
 
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.input_boolean import DOMAIN as INPUT_BOOLEAN_DOMAIN
+from homeassistant.const import CONF_NAME
 from homeassistant.helpers import selector
 from homeassistant.helpers.schema_config_entry_flow import (
     SchemaConfigFlowHandler,
@@ -69,7 +70,7 @@ OPTIONS_SCHEMA = vol.Schema(
 
 CONFIG_SCHEMA = vol.Schema(
     {
-        vol.Required("name"): selector.TextSelector(
+        vol.Required(CONF_NAME): selector.TextSelector(
             selector.TextSelectorConfig(
                 type=selector.TextSelectorType.TEXT, autocomplete="off"
             ),
@@ -97,4 +98,4 @@ class ConfigFlowHandler(SchemaConfigFlowHandler, domain=DOMAIN):
 
     def async_config_entry_title(self, options: Mapping[str, Any]) -> str:
         """Return config entry title."""
-        return cast(str, options["name"]) if "name" in options else ""
+        return cast(str, options[CONF_NAME]) if CONF_NAME in options else ""
