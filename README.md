@@ -47,6 +47,8 @@ _Please :star: this repo if you find it useful_
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png)](https://www.buymeacoffee.com/codechimp)
 
+![Helper Creation](https://raw.githubusercontent.com/andrew-codechimp/ha-wasp-in-a-box/main/images/helper-create.png "Helper Creation")
+
 ## Installation
 
 ### HACS
@@ -75,8 +77,6 @@ Installation via HACS is recommended, but a manual setup is supported.
 A new Wasp in a Box helper will be available within Settings/Helpers or click the My link to jump straight there
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=wasp_in_a_box)
-
-![Helper Creation](https://raw.githubusercontent.com/andrew-codechimp/ha-wasp-in-a-box/main/images/helper-create.png "Helper Creation")
 
 ---
 
