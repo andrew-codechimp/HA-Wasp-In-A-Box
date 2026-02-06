@@ -11,6 +11,8 @@ Wasp in a Box Helpers for Home Assistant
 
 ## Overview
 
+⚠️ This is a pre-release, there may be issues and changes as this is refined.
+
 Wasp in a Box is an automation pattern for enclosed rooms (such as bathrooms) that helps determine reliable occupancy while a person remains inside, even if out of range of the motion senosr or being still.
 
 This helper is designed for single occupancy enclosed spaces where the door is shut when occupied, it will not work for multiple occupancy.
@@ -70,7 +72,7 @@ Installation via HACS is recommended, but a manual setup is supported.
 
 </details>
 
-A new WaspInABox helper will be available within Settings/Helpers or click the My link to jump straight there
+A new Wasp in a Box helper will be available within Settings/Helpers or click the My link to jump straight there
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=wasp_in_a_box)
 
@@ -79,7 +81,7 @@ A new WaspInABox helper will be available within Settings/Helpers or click the M
 [commits-shield]: https://img.shields.io/github/commit-activity/y/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
 [commits]: https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/commits/main
 [hacs]: https://github.com/hacs/integration
-[hacsbadge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
+[hacsbadge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge
 [exampleimg]: example.png
 [license-shield]: https://img.shields.io/github/license/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
