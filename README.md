@@ -55,7 +55,7 @@ _Please :star: this repo if you find it useful_
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=andrew-codechimp&repository=HA-Wasp-In-A-Box&category=Integration)
 
-Or search for **Wasp in a Box** within HACS if My Home Assistant does not work for you
+Or add this repo url as a custom integration within HACS if My Home Assistant does not work for you
 
 Restart Home Assistant
 
