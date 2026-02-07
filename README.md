@@ -28,7 +28,7 @@ This helper overcomes the limitations of PIR motion sensors, which cannot detect
 
 1. Door opens, then closes
 2. Motion is detected
-3. Helper remains "occupied" until the door opens again, or the motion sensor has been unoccupied past the timeout period. 
+3. Helper remains "occupied" until the door opens again, or the motion sensor has been unoccupied past the door closed delay period. 
 
 **Open door detection**
 
