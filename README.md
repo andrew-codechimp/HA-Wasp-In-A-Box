@@ -25,17 +25,20 @@ This helper overcomes the limitations of PIR motion sensors, which cannot detect
 - **Door sensor** - Monitors door open/closed state
 
 **Occupancy logic**
+
 1. Door opens, then closes
 2. Motion is detected
 3. Helper remains "occupied" until the door opens again, or the motion sensor has been unoccupied past the timeout period. 
 
 **Open door detection**
+
 If the door is open and the motion sensor has not had motion for the door open timeout period then the room is considered unoccupied.
 
 **Quick exit detection**
+
 If the door opens then closes and the motion sensor clears within the door closed delay period, the room is considered unoccupied (e.g., someone quickly grabbing something without staying).
 
-### Immediate on setting
+**Immediate on setting**
 
 Control when the helper transitions to "occupied":
 
