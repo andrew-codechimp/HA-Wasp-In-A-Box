@@ -82,7 +82,7 @@ A new Wasp in a Box helper will be available within Settings/Helpers or click th
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=wasp_in_a_box)
 
 ## Tips & FAQ's
-- If your occupancy clears after you shut the door but are in the room then ensure the door closed delay is set accurately. Too long and there's a chance that a lack of movement will cause it to think the room was quickly exited. For Philips Hue motion sensors I find 25 seconds to be about right but time your sensor by starting a stopwatch when you obscure the motion sensor and watch the Home Assistant sensor to determine the exact time it clears, then add approximately 10 seconds to it.
+- If occupancy clears after you shut the door but are in the room then ensure the door closed delay is set accurately. Too long and there's a chance that a lack of movement will cause it to think the room was quickly exited. For Philips Hue motion sensors I find 25 seconds to be about right but time your sensor by starting a stopwatch when you obscure the motion sensor and watch the Home Assistant sensor to determine the exact time it clears, then add approximately 10 seconds to it.
 
 - For automating lights I usually have a courtesy/safeguard delay of about a minute or two before I turn off the lights. A trigger within your automation like this adds that delay.
 
