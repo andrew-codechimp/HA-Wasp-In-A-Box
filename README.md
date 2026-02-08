@@ -81,6 +81,36 @@ A new Wasp in a Box helper will be available within Settings/Helpers or click th
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=wasp_in_a_box)
 
+## Tips & FAQ's
+- If your occupancy clears after you shut the door but are in the room then ensure the door closed delay is set accurately. Too long and there's a chance that a lack of movement will cause it to think the room was quickly exited. For Philips Hue motion sensors I find 25 seconds to be about right but time your sensor by starting a stopwatch when you obscure the motion sensor and watch the Home Assistant sensor to determine the exact time it clears, then add approximately 10 seconds to it.
+
+- For automating lights I usually have a courtesy/safeguard delay of about a minute or two before I turn off the lights. A trigger within your automation like this adds that delay.
+
+```
+trigger: state
+entity_id:
+  - binary_sensor.bathroom_occupancy
+from:
+  - "on"  
+to:
+  - "off"
+for:
+  hours: 0
+  minutes: 2
+  seconds: 0
+```
+
+- When Home Assistant restarts, if the door is open, presence is detected until the door timeout period which means your automation will trigger. To avoid this check the from state as part of the trigger.
+```
+trigger: state
+entity_id:
+  - binary_sensor.bathroom_occupancy
+from:
+  - "off"  
+to:
+  - "on"
+```
+
 ---
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
