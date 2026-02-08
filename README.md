@@ -100,17 +100,6 @@ for:
   seconds: 0
 ```
 
-- When Home Assistant restarts, if the door is open, presence is detected until the door timeout period which means your automation will trigger. To avoid this check the from state as part of the trigger.
-```
-trigger: state
-entity_id:
-  - binary_sensor.bathroom_occupancy
-from:
-  - "off"  
-to:
-  - "on"
-```
-
 ---
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
