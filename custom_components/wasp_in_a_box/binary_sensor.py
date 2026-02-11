@@ -9,10 +9,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    STATE_UNAVAILABLE,
-    STATE_UNKNOWN,
-)
+from homeassistant.const import STATE_OFF, STATE_ON, STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import (
     CALLBACK_TYPE,
     Event,
@@ -74,8 +71,8 @@ class WaspInABoxSensor(BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.OCCUPANCY
     _attr_should_poll = False
     _state_had_real_change = False
-    _wasp_state: str | None = None
-    _box_state: str | None = None
+    _wasp_state: str = STATE_UNKNOWN
+    _box_state: str = STATE_UNKNOWN
     _door_closed_delay_timer: CALLBACK_TYPE | None = None
     _door_open_timeout_timer: CALLBACK_TYPE | None = None
     _motion_was_detected: bool = False
@@ -101,7 +98,7 @@ class WaspInABoxSensor(BinarySensorEntity):
         self._timeout = timeout
         self._immediate_on = immediate_on
         self._attr_name = name
-        self._state: str | None = None
+        self._state: str = STATE_UNKNOWN
 
     async def async_added_to_hass(self) -> None:
         """Handle added to Hass."""
@@ -177,10 +174,10 @@ class WaspInABoxSensor(BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         """Return true if occupancy is detected."""
-        if self._state in [STATE_UNKNOWN, STATE_UNAVAILABLE, None]:
+        if self._state in [STATE_UNKNOWN, STATE_UNAVAILABLE]:
             return None
-        # Convert state to boolean - "on"/"home" means occupied
-        return self._state == "on"
+        # Convert state to boolean - "on" means occupied
+        return self._state == STATE_ON
 
     @callback
     def _async_wasp_state_listener(self, event: Event[EventStateChangedData]) -> None:
@@ -212,8 +209,8 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._door_open_timeout_timer()
             self._door_open_timeout_timer = None
 
-        if self._wasp_state == "off" and (
-            self._box_state is None or self._box_state == "on"
+        if self._wasp_state == STATE_OFF and (
+            self._box_state in [STATE_ON, STATE_UNKNOWN]
         ):
             LOGGER.debug(
                 "Motion unoccupied and door open, waiting %s seconds before recalculating",
@@ -251,8 +248,8 @@ class WaspInABoxSensor(BinarySensorEntity):
             # Check if door just closed (transition from open to closed)
             door_just_closed = (
                 old_state is not None
-                and old_state.state == "on"
-                and new_state.state == "off"
+                and old_state.state == STATE_ON
+                and new_state.state == STATE_OFF
             )
 
             self._box_state = new_state.state
@@ -282,7 +279,7 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._door_open_timeout_timer()
             self._door_open_timeout_timer = None
 
-        if self._wasp_state == "off" and self._box_state == "on":
+        if self._wasp_state == STATE_OFF and self._box_state == STATE_ON:
             LOGGER.debug(
                 "Motion unoccupied and door open, waiting %s seconds before recalculating",
                 self._timeout,
@@ -306,10 +303,10 @@ class WaspInABoxSensor(BinarySensorEntity):
         """Handle the timeout timer callback."""
         self._door_open_timeout_timer = None
         LOGGER.debug("Door open timeout expired, setting state to off")
-        self._wasp_state = "off"
+        self._wasp_state = STATE_OFF
         self._motion_was_detected = False
 
-        self._state = "off"
+        self._state = STATE_OFF
         self.async_write_ha_state()
 
     @callback
@@ -329,21 +326,21 @@ class WaspInABoxSensor(BinarySensorEntity):
 
         # Room is occupied when door is closed (box 'off') and motion detected (wasp 'on')
         door_closed = (
-            False if self._box_state == STATE_UNKNOWN else self._box_state == "off"
+            False if self._box_state == STATE_UNKNOWN else self._box_state == STATE_OFF
         )
-        motion_detected_now = self._wasp_state == "on"
+        motion_detected_now = self._wasp_state == STATE_ON
         motion_detected = motion_detected_now or self._motion_was_detected
 
         if door_closed and motion_detected:
-            self._state = "on"
+            self._state = STATE_ON
         else:
-            self._state = "off"
+            self._state = STATE_OFF
 
         if not door_closed and self._immediate_on:
-            self._state = "on"
+            self._state = STATE_ON
 
         if motion_detected_now and self._immediate_on:
-            self._state = "on"
+            self._state = STATE_ON
 
         self._motion_was_detected = motion_detected
 
