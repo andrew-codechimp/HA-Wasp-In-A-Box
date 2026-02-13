@@ -903,11 +903,11 @@ dev = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "aiodns", specifier = "<4.0.0" },
+    { name = "aiodns", specifier = "<4.0.1" },
     { name = "colorlog" },
     { name = "homeassistant", specifier = "==2026.1.0" },
     { name = "mypy" },
-    { name = "pycares", specifier = "<5.0.0" },
+    { name = "pycares", specifier = "<5.0.2" },
     { name = "pygments" },
     { name = "pytest-homeassistant-custom-component" },
     { name = "ruff" },
