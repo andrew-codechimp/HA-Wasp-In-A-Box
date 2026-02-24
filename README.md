@@ -1,4 +1,4 @@
-# HA-Wasp-In-A-Box
+# Wasp In A Box
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
