@@ -18,7 +18,10 @@ from homeassistant.core import (
     callback,
 )
 from homeassistant.helpers import entity_registry as er
-from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.entity_platform import (
+    AddConfigEntryEntitiesCallback,
+    async_get_current_platform,
+)
 from homeassistant.helpers.event import (
     async_call_later,
     async_track_state_change_event,
@@ -31,6 +34,7 @@ from .const import (
     CONF_IMMEDIATE_ON,
     CONF_WASP_ID,
     LOGGER,
+    SERVICE_RESET,
 )
 
 
@@ -60,6 +64,14 @@ async def async_setup_entry(
                 config_entry.entry_id,
             )
         ]
+    )
+
+    # Register entity services
+    platform = async_get_current_platform()
+    platform.async_register_entity_service(
+        SERVICE_RESET,
+        {},
+        "async_reset",
     )
 
     return True
@@ -344,4 +356,21 @@ class WaspInABoxSensor(BinarySensorEntity):
 
         self._motion_was_detected = motion_detected
 
+        self.async_write_ha_state()
+
+    async def async_reset(self) -> None:
+        """Reset the occupancy sensor to off."""
+
+        # Cancel any pending timers
+        if self._door_closed_delay_timer is not None:
+            self._door_closed_delay_timer()
+            self._door_closed_delay_timer = None
+
+        if self._door_open_timeout_timer is not None:
+            self._door_open_timeout_timer()
+            self._door_open_timeout_timer = None
+
+        # Reset internal state
+        self._motion_was_detected = False
+        self._state = STATE_OFF
         self.async_write_ha_state()
