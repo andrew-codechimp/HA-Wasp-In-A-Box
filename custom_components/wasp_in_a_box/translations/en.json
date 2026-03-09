@@ -46,7 +46,7 @@
         "binary_sensor": {
             "wasp_in_a_box": {
                 "state_attributes": {
-                    "wasp_state": {
+                    "motion_sensor_state": {
                         "name": "Motion sensor state",
                         "state": {
                             "on": "Motion detected",
@@ -54,7 +54,7 @@
                             "unknown": "Unknown"
                         }
                     },
-                    "box_state": {
+                    "door_sensor_state": {
                         "name": "Door sensor state",
                         "state": {
                             "on": "Open",

@@ -25,8 +25,8 @@ from homeassistant.helpers.event import (
 )
 
 from .const import (
-    ATTR_BOX_STATE,
-    ATTR_WASP_STATE,
+    ATTR_DOOR_SENSOR_STATE,
+    ATTR_MOTION_SENSOR_STATE,
     CONF_BOX_ID,
     CONF_DOOR_CLOSED_DELAY,
     CONF_DOOR_OPEN_TIMEOUT,
@@ -186,8 +186,8 @@ class WaspInABoxSensor(BinarySensorEntity):
     def extra_state_attributes(self) -> dict[str, str]:
         """Return state attributes."""
         return {
-            ATTR_WASP_STATE: self._wasp_state,
-            ATTR_BOX_STATE: self._box_state,
+            ATTR_MOTION_SENSOR_STATE: self._wasp_state,
+            ATTR_DOOR_SENSOR_STATE: self._box_state,
         }
 
     @callback
