@@ -44,6 +44,7 @@ Control when the helper transitions to "occupied":
 - **Off** - Helper becomes occupied after the door closes, motion is detected, and the delay period expires (good for fan automation)
 
 **Reset action**
+
 A reset action is provided that will set the state to unoccupied and cancel any timers.
 
 
@@ -102,8 +103,6 @@ for:
 ```
 
 - For advanced automations the state of the motion and door sensors are exposed as attributes within the binary sensor.
-
-- A reset action is provided if you wish to reset the Wasp in a Box sensor to unoccupied.
 
 ---
 
