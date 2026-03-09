@@ -49,8 +49,8 @@
                     "motion_sensor_state": {
                         "name": "Motion sensor state",
                         "state": {
-                            "on": "Motion detected",
-                            "off": "No motion",
+                            "on": "Detected",
+                            "off": "Clear",
                             "unknown": "Unknown"
                         }
                     },
