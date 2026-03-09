@@ -103,7 +103,7 @@ for:
 
 - For advanced automations the state of the motion and door sensors are exposed as attributes within the binary sensor.
 
-- A reset action is provided if you wish to reset the Wasp in a Box sensor to unoccopied.
+- A reset action is provided if you wish to reset the Wasp in a Box sensor to unoccupied.
 
 ---
 
