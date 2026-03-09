@@ -98,6 +98,8 @@ for:
   seconds: 0
 ```
 
+- For advanced automations the state of the motion and door sensors are exposed as attributes within the binary sensor.
+
 ---
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge

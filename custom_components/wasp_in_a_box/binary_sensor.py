@@ -25,6 +25,8 @@ from homeassistant.helpers.event import (
 )
 
 from .const import (
+    ATTR_DOOR_SENSOR_STATE,
+    ATTR_MOTION_SENSOR_STATE,
     CONF_BOX_ID,
     CONF_DOOR_CLOSED_DELAY,
     CONF_DOOR_OPEN_TIMEOUT,
@@ -70,6 +72,7 @@ class WaspInABoxSensor(BinarySensorEntity):
 
     _attr_device_class = BinarySensorDeviceClass.OCCUPANCY
     _attr_should_poll = False
+    _attr_translation_key = "wasp_in_a_box"
     _state_had_real_change = False
     _wasp_state: str = STATE_UNKNOWN
     _box_state: str = STATE_UNKNOWN
@@ -178,6 +181,14 @@ class WaspInABoxSensor(BinarySensorEntity):
             return None
         # Convert state to boolean - "on" means occupied
         return self._state == STATE_ON
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str]:
+        """Return state attributes."""
+        return {
+            ATTR_MOTION_SENSOR_STATE: self._wasp_state,
+            ATTR_DOOR_SENSOR_STATE: self._box_state,
+        }
 
     @callback
     def _async_wasp_state_listener(self, event: Event[EventStateChangedData]) -> None:
