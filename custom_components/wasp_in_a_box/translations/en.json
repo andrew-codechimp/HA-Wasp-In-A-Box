@@ -41,5 +41,29 @@
                 }
             }
         }
+    },
+    "entity": {
+        "binary_sensor": {
+            "wasp_in_a_box": {
+                "state_attributes": {
+                    "wasp_state": {
+                        "name": "Motion sensor state",
+                        "state": {
+                            "on": "Motion detected",
+                            "off": "No motion",
+                            "unknown": "Unknown"
+                        }
+                    },
+                    "box_state": {
+                        "name": "Door sensor state",
+                        "state": {
+                            "on": "Open",
+                            "off": "Closed",
+                            "unknown": "Unknown"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
