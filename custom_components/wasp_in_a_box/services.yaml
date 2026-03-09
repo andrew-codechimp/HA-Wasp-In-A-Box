@@ -1,0 +1,8 @@
+# Services for Wasp in a Box integration
+reset:
+  name: Reset
+  description: Reset the occupancy sensor to off and clear any pending timers.
+  target:
+    entity:
+      integration: wasp_in_a_box
+      domain: binary_sensor

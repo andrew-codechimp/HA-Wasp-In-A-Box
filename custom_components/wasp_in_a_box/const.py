@@ -24,3 +24,4 @@ DEFAULT_IMMEDIATE_ON = True
 
 ATTR_MOTION_SENSOR_STATE = "motion_sensor_state"
 ATTR_DOOR_SENSOR_STATE = "door_sensor_state"
+SERVICE_RESET = "reset"

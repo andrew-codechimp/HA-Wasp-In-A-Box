@@ -65,5 +65,11 @@
                 }
             }
         }
+    },
+    "services": {
+        "reset": {
+            "name": "Reset",
+            "description": "Reset the occupancy sensor to off and clear any pending timers."
+        }
     }
 }
