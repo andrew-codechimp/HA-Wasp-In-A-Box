@@ -226,7 +226,7 @@ async def test_source_returns_makes_helper_available(
     hass.states.async_set("binary_sensor.test_motion", "off")
     hass.states.async_set("binary_sensor.test_door", "off")
     await hass.async_block_till_done()
-    assert hass.states.get("binary_sensor.waspinabox").state != "unavailable"
+    assert hass.states.get("binary_sensor.waspinabox").state == "off"
 
     # Remove the motion source -> helper becomes unavailable
     entity_registry.async_remove(motion.entity_id)

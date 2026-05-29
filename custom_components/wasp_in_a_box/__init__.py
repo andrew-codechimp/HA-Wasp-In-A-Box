@@ -51,7 +51,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     entity_registry = er.async_get(hass)
 
-    def _resolve(option_id: str) -> str:
+    def _resolve(option_id: str, label: str) -> str:
         """Resolve an option value (registry-id or entity_id) to an entity_id.
 
         Falls back to the raw value when the entity is not (yet) in the
@@ -62,14 +62,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             return er.async_validate_entity_id(entity_registry, option_id)
         except vol.Invalid:
             LOGGER.warning(
-                "wasp_in_a_box: source entity %s is not in the registry; "
+                "%s source entity %s is not in the registry; "
                 "helper will be unavailable until it appears",
+                label,
                 option_id,
             )
             return option_id
 
-    wasp_entity_id = _resolve(entry.options[CONF_WASP_ID])
-    box_entity_id = _resolve(entry.options[CONF_BOX_ID])
+    wasp_entity_id = _resolve(entry.options[CONF_WASP_ID], "Motion")
+    box_entity_id = _resolve(entry.options[CONF_BOX_ID], "Door")
 
     async def async_registry_updated(
         event: Event[er.EventEntityRegistryUpdatedData],
