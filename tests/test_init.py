@@ -184,3 +184,68 @@ async def test_setup_with_missing_source_loads_unavailable(
     state = hass.states.get("binary_sensor.waspinabox")
     assert state is not None
     assert state.state == "unavailable"
+
+
+async def test_source_returns_makes_helper_available(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+) -> None:
+    """After a source sensor is removed and then recreated, the helper
+    must come back online (available) without manual intervention.
+    """
+    source_config_entry = MockConfigEntry()
+    source_config_entry.add_to_hass(hass)
+
+    motion = entity_registry.async_get_or_create(
+        "binary_sensor",
+        "test",
+        "motion",
+        suggested_object_id="test_motion",
+        config_entry=source_config_entry,
+    )
+    entity_registry.async_get_or_create(
+        "binary_sensor",
+        "test",
+        "door",
+        suggested_object_id="test_door",
+        config_entry=source_config_entry,
+    )
+
+    wasp_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            CONF_WASP_ID: "binary_sensor.test_motion",
+            CONF_BOX_ID: "binary_sensor.test_door",
+            CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
+            CONF_DOOR_OPEN_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
+            CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
+        },
+        title=DEFAULT_NAME,
+        entry_id="recover",
+    )
+    wasp_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(wasp_entry.entry_id)
+    await hass.async_block_till_done()
+    hass.states.async_set("binary_sensor.test_motion", "off")
+    hass.states.async_set("binary_sensor.test_door", "off")
+    await hass.async_block_till_done()
+    assert hass.states.get("binary_sensor.waspinabox").state != "unavailable"
+
+    # Remove the motion source -> helper becomes unavailable
+    entity_registry.async_remove(motion.entity_id)
+    hass.states.async_remove("binary_sensor.test_motion")
+    await hass.async_block_till_done()
+    assert hass.states.get("binary_sensor.waspinabox").state == "unavailable"
+
+    # Recreate it -> helper returns to a real state (not unavailable)
+    entity_registry.async_get_or_create(
+        "binary_sensor",
+        "test",
+        "motion",
+        suggested_object_id="test_motion",
+        config_entry=source_config_entry,
+    )
+    hass.states.async_set("binary_sensor.test_motion", "off")
+    await hass.async_block_till_done()
+    assert hass.states.get("binary_sensor.waspinabox").state != "unavailable"
