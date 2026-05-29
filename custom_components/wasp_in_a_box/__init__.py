@@ -50,28 +50,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Min/Max from a config entry."""
 
     entity_registry = er.async_get(hass)
-    try:
-        wasp_entity_id = er.async_validate_entity_id(
-            entity_registry, entry.options[CONF_WASP_ID]
-        )
-    except vol.Invalid:
-        # The entity is identified by an unknown entity registry ID
-        LOGGER.error(
-            "Failed to setup wasp_in_a_box for unknown entity %s",
-            entry.options[CONF_WASP_ID],
-        )
-        return False
-    try:
-        box_entity_id = er.async_validate_entity_id(
-            entity_registry, entry.options[CONF_BOX_ID]
-        )
-    except vol.Invalid:
-        # The entity is identified by an unknown entity registry ID
-        LOGGER.error(
-            "Failed to setup wasp_in_a_box for unknown entity %s",
-            entry.options[CONF_BOX_ID],
-        )
-        return False
+
+    def _resolve(option_id: str) -> str:
+        """Resolve an option value (registry-id or entity_id) to an entity_id.
+
+        Falls back to the raw value when the entity is not (yet) in the
+        registry, so the helper can still load and listen for the entity
+        to appear.
+        """
+        try:
+            return er.async_validate_entity_id(entity_registry, option_id)
+        except vol.Invalid:
+            LOGGER.warning(
+                "wasp_in_a_box: source entity %s is not in the registry; "
+                "helper will be unavailable until it appears",
+                option_id,
+            )
+            return option_id
+
+    wasp_entity_id = _resolve(entry.options[CONF_WASP_ID])
+    box_entity_id = _resolve(entry.options[CONF_BOX_ID])
 
     async def async_registry_updated(
         event: Event[er.EventEntityRegistryUpdatedData],

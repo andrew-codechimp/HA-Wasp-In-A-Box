@@ -153,3 +153,34 @@ async def test_source_removal_preserves_entry(
 
     # Assert: the wasp ConfigEntry still exists (not auto-removed)
     assert hass.config_entries.async_get_entry(wasp_entry.entry_id) is not None
+
+
+async def test_setup_with_missing_source_loads_unavailable(
+    hass: HomeAssistant,
+) -> None:
+    """When a source entity is not (yet) in the registry at setup time,
+    the ConfigEntry must still load. The wasp binary sensor exists but
+    is unavailable until the source appears.
+    """
+    wasp_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            CONF_WASP_ID: "binary_sensor.does_not_exist_motion",
+            CONF_BOX_ID: "binary_sensor.does_not_exist_door",
+            CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
+            CONF_DOOR_OPEN_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
+            CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
+        },
+        title=DEFAULT_NAME,
+        entry_id="missing_src",
+    )
+    wasp_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(wasp_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert wasp_entry.state is ConfigEntryState.LOADED
+
+    state = hass.states.get("binary_sensor.waspinabox")
+    assert state is not None
+    assert state.state == "unavailable"
