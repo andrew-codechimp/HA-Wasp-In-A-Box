@@ -102,3 +102,54 @@ async def test_setup(
     # Check the state and entity registry entry are removed
     assert hass.states.get(wasp_in_a_box_entity.entity_id) is None
     assert entity_registry.async_get(wasp_in_a_box_entity.entity_id) is None
+
+
+async def test_source_removal_preserves_entry(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+) -> None:
+    """When a source sensor is removed from the entity registry, the wasp
+    helper's ConfigEntry must NOT be auto-removed (issue #32).
+    """
+    # Create a source config entry so we can register entities tied to it
+    source_config_entry = MockConfigEntry()
+    source_config_entry.add_to_hass(hass)
+
+    motion = entity_registry.async_get_or_create(
+        "binary_sensor",
+        "test",
+        "motion",
+        suggested_object_id="test_motion",
+        config_entry=source_config_entry,
+    )
+    entity_registry.async_get_or_create(
+        "binary_sensor",
+        "test",
+        "door",
+        suggested_object_id="test_door",
+        config_entry=source_config_entry,
+    )
+
+    wasp_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            CONF_WASP_ID: "binary_sensor.test_motion",
+            CONF_BOX_ID: "binary_sensor.test_door",
+            CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
+            CONF_DOOR_OPEN_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
+            CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
+        },
+        title=DEFAULT_NAME,
+    )
+    wasp_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(wasp_entry.entry_id)
+    await hass.async_block_till_done()
+    assert wasp_entry.state is ConfigEntryState.LOADED
+
+    # Act: remove the source motion sensor
+    entity_registry.async_remove(motion.entity_id)
+    await hass.async_block_till_done()
+
+    # Assert: the wasp ConfigEntry still exists (not auto-removed)
+    assert hass.config_entries.async_get_entry(wasp_entry.entry_id) is not None

@@ -76,16 +76,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     async def async_registry_updated(
         event: Event[er.EventEntityRegistryUpdatedData],
     ) -> None:
-        """Handle entity registry update."""
+        """Handle entity registry update.
+
+        On source-sensor removal we do NOT remove the wasp ConfigEntry
+        (see issue #32). The helper stays available; its binary sensor
+        becomes 'unavailable' until the source is recreated. We reload the
+        entry so listeners re-subscribe and the new state is replayed.
+        """
         data = event.data
         if data["action"] == "remove":
-            await hass.config_entries.async_remove(entry.entry_id)
+            await hass.config_entries.async_reload(entry.entry_id)
+            return
 
         if data["action"] != "update":
             return
 
         if "entity_id" in data["changes"]:
-            # Entity_id changed, reload the config entry
             await hass.config_entries.async_reload(entry.entry_id)
 
     entry.async_on_unload(
