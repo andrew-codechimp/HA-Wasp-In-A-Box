@@ -108,9 +108,7 @@ async def test_source_removal_preserves_entry(
     hass: HomeAssistant,
     entity_registry: er.EntityRegistry,
 ) -> None:
-    """When a source sensor is removed from the entity registry, the wasp
-    helper's ConfigEntry must NOT be auto-removed (issue #32).
-    """
+    """When a source sensor is removed from the entity registry, the wasp helper's ConfigEntry must NOT be auto-removed (issue #32)."""
     # Create a source config entry so we can register entities tied to it
     source_config_entry = MockConfigEntry()
     source_config_entry.add_to_hass(hass)
@@ -158,9 +156,9 @@ async def test_source_removal_preserves_entry(
 async def test_setup_with_missing_source_loads_unavailable(
     hass: HomeAssistant,
 ) -> None:
-    """When a source entity is not (yet) in the registry at setup time,
-    the ConfigEntry must still load. The wasp binary sensor exists but
-    is unavailable until the source appears.
+    """When a source entity is not (yet) in the registry at setup time, the ConfigEntry must still load.
+
+    The wasp binary sensor exists but is unavailable until the source appears.
     """
     wasp_entry = MockConfigEntry(
         data={},
@@ -190,9 +188,7 @@ async def test_source_returns_makes_helper_available(
     hass: HomeAssistant,
     entity_registry: er.EntityRegistry,
 ) -> None:
-    """After a source sensor is removed and then recreated, the helper
-    must come back online (available) without manual intervention.
-    """
+    """After a source sensor is removed and then recreated, the helper must come back online (available) without manual intervention."""
     source_config_entry = MockConfigEntry()
     source_config_entry.add_to_hass(hass)
 
