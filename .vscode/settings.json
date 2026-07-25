@@ -1,6 +1,7 @@
 {
     "git.autofetch": true,
     "python.createEnvironment.trigger": "off",
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {

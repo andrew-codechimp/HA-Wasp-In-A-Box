@@ -6,7 +6,7 @@ from homeassistant.const import Platform
 
 LOGGER: Logger = getLogger(__package__)
 
-MIN_HA_VERSION = "2026.1"
+MIN_HA_VERSION = "2026.4"
 
 DOMAIN = "wasp_in_a_box"
 
