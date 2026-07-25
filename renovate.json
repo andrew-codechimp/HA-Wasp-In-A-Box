@@ -5,14 +5,14 @@
     ":semanticCommits"
   ],
   "schedule": [
-    "before 6am on friday"
+    "before 6am on tuesday"
   ],
   "prConcurrentLimit": 5,
   "lockFileMaintenance": {
     "enabled": true,
-    "automerge": true,    
+    "automerge": true,
     "schedule": [
-      "before 6am on friday"
+      "before 6am on tuesday"
     ]
   },
   "ignoreDeps": [
@@ -26,22 +26,22 @@
   "packageRules": [
     {
       "description": "Group dev dependencies",
-      "matchDepTypes": ["dependency-groups"],
+      "matchDepTypes": [ "dependency-groups" ],
       "groupName": "dev dependencies",
       "automerge": false
     },
     {
       "description": "Auto-merge non-major dev dependency updates",
-      "matchDepTypes": ["dependency-groups"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": [ "dependency-groups" ],
+      "matchUpdateTypes": [ "minor", "patch" ],
       "automerge": true
     },
     {
       "description": "Group GitHub Actions updates",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [ "github-actions" ],
       "groupName": "GitHub Actions",
       "automerge": true,
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": [ "minor", "patch" ]
     }
   ]
 }
