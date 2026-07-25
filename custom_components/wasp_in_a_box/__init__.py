@@ -50,42 +50,47 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Min/Max from a config entry."""
 
     entity_registry = er.async_get(hass)
-    try:
-        wasp_entity_id = er.async_validate_entity_id(
-            entity_registry, entry.options[CONF_WASP_ID]
-        )
-    except vol.Invalid:
-        # The entity is identified by an unknown entity registry ID
-        LOGGER.error(
-            "Failed to setup wasp_in_a_box for unknown entity %s",
-            entry.options[CONF_WASP_ID],
-        )
-        return False
-    try:
-        box_entity_id = er.async_validate_entity_id(
-            entity_registry, entry.options[CONF_BOX_ID]
-        )
-    except vol.Invalid:
-        # The entity is identified by an unknown entity registry ID
-        LOGGER.error(
-            "Failed to setup wasp_in_a_box for unknown entity %s",
-            entry.options[CONF_BOX_ID],
-        )
-        return False
+
+    def _resolve(option_id: str, label: str) -> str:
+        """Resolve an option value (registry-id or entity_id) to an entity_id.
+
+        Falls back to the raw value when the entity is not (yet) in the
+        registry, so the helper can still load and listen for the entity
+        to appear.
+        """
+        try:
+            return er.async_validate_entity_id(entity_registry, option_id)
+        except vol.Invalid:
+            LOGGER.warning(
+                "%s source entity %s is not in the registry; "
+                "helper will be unavailable until it appears",
+                label,
+                option_id,
+            )
+            return option_id
+
+    wasp_entity_id = _resolve(entry.options[CONF_WASP_ID], "Motion")
+    box_entity_id = _resolve(entry.options[CONF_BOX_ID], "Door")
 
     async def async_registry_updated(
         event: Event[er.EventEntityRegistryUpdatedData],
     ) -> None:
-        """Handle entity registry update."""
+        """Handle entity registry update.
+
+        On source-sensor removal we do NOT remove the wasp ConfigEntry
+        (see issue #32). The helper stays available; its binary sensor
+        becomes 'unavailable' until the source is recreated. We reload the
+        entry so listeners re-subscribe and the new state is replayed.
+        """
         data = event.data
         if data["action"] == "remove":
-            await hass.config_entries.async_remove(entry.entry_id)
+            await hass.config_entries.async_reload(entry.entry_id)
+            return
 
         if data["action"] != "update":
             return
 
         if "entity_id" in data["changes"]:
-            # Entity_id changed, reload the config entry
             await hass.config_entries.async_reload(entry.entry_id)
 
     entry.async_on_unload(

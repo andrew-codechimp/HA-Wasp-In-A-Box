@@ -150,10 +150,11 @@ class WaspInABoxSensor(BinarySensorEntity):
                 self._box_entity_id,
             )
 
-        if wasp_entry and box_entry:
-            # Replay current state of wasp entitiy
-            wasp_state = self.hass.states.get(self._wasp_entity_id)
-            wasp_state_event: Event[EventStateChangedData] = Event(
+        # Always replay current state. If a source is missing the state will
+        # be None and the listener will set our internal state to UNKNOWN.
+        wasp_state = self.hass.states.get(self._wasp_entity_id)
+        self._async_wasp_state_listener(
+            Event(
                 "",
                 {
                     "entity_id": self._wasp_entity_id,
@@ -161,11 +162,11 @@ class WaspInABoxSensor(BinarySensorEntity):
                     "old_state": None,
                 },
             )
-            self._async_wasp_state_listener(wasp_state_event)
+        )
 
-            # Replay current state of box entitiy
-            box_state = self.hass.states.get(self._box_entity_id)
-            box_state_event: Event[EventStateChangedData] = Event(
+        box_state = self.hass.states.get(self._box_entity_id)
+        self._async_box_state_listener(
+            Event(
                 "",
                 {
                     "entity_id": self._box_entity_id,
@@ -173,7 +174,7 @@ class WaspInABoxSensor(BinarySensorEntity):
                     "old_state": None,
                 },
             )
-            self._async_box_state_listener(box_state_event)
+        )
 
     async def async_will_remove_from_hass(self) -> None:
         """Handle removal from hass."""
@@ -193,6 +194,15 @@ class WaspInABoxSensor(BinarySensorEntity):
             return None
         # Convert state to boolean - "on" means occupied
         return self._state == STATE_ON
+
+    @property
+    def available(self) -> bool:
+        """Return False when any source sensor is missing or unavailable."""
+        for entity_id in (self._wasp_entity_id, self._box_entity_id):
+            state = self.hass.states.get(entity_id)
+            if state is None or state.state in (STATE_UNKNOWN, STATE_UNAVAILABLE):
+                return False
+        return True
 
     @property
     def extra_state_attributes(self) -> dict[str, str]:
