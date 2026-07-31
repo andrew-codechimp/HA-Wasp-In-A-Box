@@ -102,7 +102,7 @@ for:
   seconds: 0
 ```
 
-- For advanced automations the state of the motion and door sensors are exposed as attributes within the binary sensor.
+- For more complex automations the state of the motion and door sensors are exposed as attributes within the binary sensor.
 
 ---
 
