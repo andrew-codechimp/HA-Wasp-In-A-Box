@@ -1,4 +1,6 @@
-"""Constants for wasp_in_a_box tests."""
+"""Constants for Wasp in a Box tests."""
 
-# Mock config data to be used across multiple tests
 DEFAULT_NAME = "WaspInABox"
+MOTION_ENTITY_ID = "binary_sensor.test_motion"
+DOOR_ENTITY_ID = "binary_sensor.test_door"
+OCCUPANCY_ENTITY_ID = "binary_sensor.waspinabox"

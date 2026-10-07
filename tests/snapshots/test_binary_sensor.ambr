@@ -1,0 +1,54 @@
+# serializer version: 1
+# name: test_entity[binary_sensor.waspinabox-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.waspinabox',
+    'has_entity_name': False,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'WaspInABox',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.OCCUPANCY: 'occupancy'>,
+    'original_icon': None,
+    'original_name': 'WaspInABox',
+    'platform': 'wasp_in_a_box',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'wasp_in_a_box',
+    'unique_id': 'wasp-entry',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entity[binary_sensor.waspinabox-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      'device_class': 'occupancy',
+      'door_sensor_state': 'off',
+      'friendly_name': 'WaspInABox',
+      'motion_sensor_state': 'off',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.waspinabox',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---

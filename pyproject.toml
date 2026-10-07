@@ -100,6 +100,12 @@ ignore = [
 ]
 
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "PLR0913", # Pytest injects fixtures and parametrized cases as arguments.
+    "TC002", # Keep fixture annotation types available at runtime.
+]
+
 [tool.ruff.lint.mccabe]
 max-complexity = 25
 

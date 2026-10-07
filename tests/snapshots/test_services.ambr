@@ -1,0 +1,17 @@
+# serializer version: 1
+# name: test_reset
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      'device_class': 'occupancy',
+      'door_sensor_state': 'off',
+      'friendly_name': 'WaspInABox',
+      'motion_sensor_state': 'on',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.waspinabox',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
