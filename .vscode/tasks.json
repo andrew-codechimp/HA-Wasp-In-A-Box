@@ -2,6 +2,40 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Tests: All with Coverage",
+            "type": "shell",
+            "command": "uv run --no-sync pytest tests --cov=custom_components.wasp_in_a_box --cov-report=term-missing --cov-report=html",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Tests: Current File",
+            "type": "shell",
+            "command": "uv run --no-sync pytest \"${file}\" -v",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
             "label": "Run Home Assistant on port 8123",
             "type": "shell",
             "command": "scripts/develop",
@@ -26,8 +60,8 @@
                 "panel": "new"
             },
             "group": {
-                "kind": "test",
-                "isDefault": true
+                "kind": "build",
+                "isDefault": false
             }
         },
         {
@@ -126,24 +160,16 @@
             }
         },
         {
-            "label": "Pytest: Run All Tests",
+            "label": "Tests: All",
             "type": "shell",
-            "command": "uv run pytest",
-            "problemMatcher": [
-                {
-                    "owner": "pytest",
-                    "fileLocation": ["relative", "${workspaceFolder}"],
-                    "pattern": {
-                        "regexp": "^(.+?):(\\d+):\\s*(.*)$",
-                        "file": 1,
-                        "line": 2,
-                        "message": 3
-                    }
-                }
-            ],
+            "command": "uv run --no-sync pytest tests -v",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
             "presentation": {
                 "reveal": "always",
-                "panel": "shared"
+                "panel": "dedicated"
             },
             "group": {
                 "kind": "test",

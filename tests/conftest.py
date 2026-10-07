@@ -1,105 +1,85 @@
-"""Global fixtures for wasp_in_a_box integration."""
-
-from __future__ import annotations
+"""Fixtures for Wasp in a Box tests."""
 
 from collections.abc import Generator
-from typing import Any
 from unittest.mock import AsyncMock, patch
 
 import pytest
 from custom_components.wasp_in_a_box.const import (
     CONF_BOX_ID,
     CONF_DOOR_CLOSED_DELAY,
+    CONF_DOOR_OPEN_TIMEOUT,
     CONF_IMMEDIATE_ON,
     CONF_WASP_ID,
     DEFAULT_DOOR_CLOSED_DELAY,
     DEFAULT_IMMEDIATE_ON,
+    DEFAULT_OPEN_DOOR_TIMEOUT,
     DOMAIN,
 )
+from freezegun.api import FrozenDateTimeFactory
 from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.syrupy import HomeAssistantSnapshotExtension
+from syrupy.assertion import SnapshotAssertion
 
-from homeassistant.config_entries import SOURCE_USER
-from homeassistant.core import HomeAssistant
+from homeassistant.const import CONF_NAME
 from homeassistant.helpers import entity_registry as er
 
-pytest_plugins = "pytest_homeassistant_custom_component"
+from .const import DEFAULT_NAME, DOOR_ENTITY_ID, MOTION_ENTITY_ID
 
 
-# This fixture enables loading custom integrations in all tests.
-# Remove to enable selective use of this fixture
+@pytest.fixture
+def snapshot(snapshot: SnapshotAssertion) -> SnapshotAssertion:
+    """Use the Home Assistant snapshot serializer."""
+    return snapshot.use_extension(HomeAssistantSnapshotExtension)
+
+
 @pytest.fixture(autouse=True)
-def auto_enable_custom_integrations(enable_custom_integrations):  # noqa: ANN001, ANN201
-    """Enable loading custom integrations."""
-    yield  # noqa: PT022
+def auto_enable_custom_integrations(enable_custom_integrations: None) -> None:
+    """Enable custom integrations in Home Assistant."""
+
+
+@pytest.fixture(autouse=True)
+def freeze_setup_time(freezer: FrozenDateTimeFactory) -> None:
+    """Keep snapshot timestamps and timer deadlines stable."""
+    freezer.move_to("2026-07-01T12:00:00+00:00")
 
 
 @pytest.fixture
 def mock_setup_entry() -> Generator[AsyncMock]:
-    """Automatically path uuid generator."""
+    """Mock integration setup when testing flows in isolation."""
     with patch(
-        "custom_components.wasp_in_a_box.async_setup_entry",
-        return_value=True,
-    ) as mock_setup_entry:
-        yield mock_setup_entry
+        "custom_components.wasp_in_a_box.async_setup_entry", return_value=True
+    ) as mock_setup:
+        yield mock_setup
 
 
-@pytest.fixture(name="get_config")
-async def get_config_to_integration_load() -> dict[str, Any]:
-    """Return configuration.
-
-    To override the config, tests can be marked with:
-    @pytest.mark.parametrize("get_config", [{...}])
-    """
-    return {
-        CONF_WASP_ID: "binary_sensor.test_motion",
-        CONF_BOX_ID: "binary_sensor.test_door",
-        CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
-        CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
-    }
-
-
-@pytest.fixture(name="loaded_entry")
-async def load_integration(
-    hass: HomeAssistant, get_config: dict[str, Any]
-) -> MockConfigEntry:
-    """Set up the wasp_in_a_box integration in Home Assistant."""
-    # Create entity registry entries for the source sensors before setup
-    entity_registry = er.async_get(hass)
-
-    entity_registry.async_get_or_create(
-        "binary_sensor",
-        "test",
-        "motion",
-        suggested_object_id="test_motion",
-    )
-
-    entity_registry.async_get_or_create(
-        "binary_sensor",
-        "test",
-        "door",
-        suggested_object_id="test_door",
-    )
-
-    config_entry = MockConfigEntry(
+@pytest.fixture
+def mock_config_entry(request: pytest.FixtureRequest) -> MockConfigEntry:
+    """Create a helper entry with default options and optional overrides."""
+    return MockConfigEntry(
         domain=DOMAIN,
-        source=SOURCE_USER,
-        options=get_config,
-        entry_id="1",
+        version=1,
+        minor_version=1,
+        entry_id="wasp-entry",
+        title=DEFAULT_NAME,
+        data={},
+        options={
+            CONF_NAME: DEFAULT_NAME,
+            CONF_WASP_ID: MOTION_ENTITY_ID,
+            CONF_BOX_ID: DOOR_ENTITY_ID,
+            CONF_DOOR_CLOSED_DELAY: DEFAULT_DOOR_CLOSED_DELAY,
+            CONF_DOOR_OPEN_TIMEOUT: DEFAULT_OPEN_DOOR_TIMEOUT,
+            CONF_IMMEDIATE_ON: DEFAULT_IMMEDIATE_ON,
+            **getattr(request, "param", {}),
+        },
     )
 
-    config_entry.add_to_hass(hass)
 
-    await hass.config_entries.async_setup(config_entry.entry_id)
-    await hass.async_block_till_done()
-
-    hass.states.async_set(
-        "binary_sensor.test_motion",
-        "off",
+@pytest.fixture
+def source_sensors(entity_registry: er.EntityRegistry) -> None:
+    """Register the motion and door sensors before loading the helper."""
+    entity_registry.async_get_or_create(
+        "binary_sensor", "test", "motion", suggested_object_id="test_motion"
     )
-    hass.states.async_set(
-        "binary_sensor.test_door",
-        "off",
+    entity_registry.async_get_or_create(
+        "binary_sensor", "test", "door", suggested_object_id="test_door"
     )
-    await hass.async_block_till_done()
-
-    return config_entry

@@ -57,7 +57,7 @@ source .venv/bin/activate # Manual activation if needed
 # OR use individual tasks:
 # - "Ruff: Check & Fix"
 # - "Mypy: Type Check"
-# - "Pytest: Run All Tests"
+# - "Tests: All with Coverage"
 ```
 
 **Linting is REQUIRED before commits** - project uses extensive Ruff rules (see `pyproject.toml`)
