@@ -1,6 +1,7 @@
 {
   "domain": "wasp_in_a_box",
   "name": "Wasp in a Box",
+  "categories": [ "helpers", "sensors.motion_presence" ],
   "codeowners": [
     "@andrew-codechimp"
   ],
