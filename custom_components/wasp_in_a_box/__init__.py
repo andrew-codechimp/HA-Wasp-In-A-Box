@@ -47,7 +47,7 @@ async def async_setup(
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Min/Max from a config entry."""
+    """Set up from a config entry."""
 
     entity_registry = er.async_get(hass)
 
