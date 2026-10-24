@@ -265,7 +265,19 @@ class WaspInABoxSensor(BinarySensorEntity):
             self._awaiting_first_box_state = False
             return
 
+        # Attribute updates must not disturb pending door timers.
+        if (
+            new_state is not None
+            and old_state is not None
+            and new_state.state == old_state.state == self._box_state
+        ):
+            return
+
         LOGGER.debug("Box state changed from %s to %s", old_state, new_state)
+
+        if self._door_open_timeout_timer is not None:
+            self._door_open_timeout_timer()
+            self._door_open_timeout_timer = None
 
         if (
             new_state is None
@@ -306,11 +318,6 @@ class WaspInABoxSensor(BinarySensorEntity):
         if self._door_closed_delay_timer is not None:
             self._door_closed_delay_timer()
             self._door_closed_delay_timer = None
-
-        # Cancel any existing timeout timer
-        if self._door_open_timeout_timer is not None:
-            self._door_open_timeout_timer()
-            self._door_open_timeout_timer = None
 
         if self._wasp_state == STATE_OFF and self._box_state == STATE_ON:
             LOGGER.debug(
