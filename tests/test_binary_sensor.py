@@ -119,6 +119,59 @@ async def test_door_closed_delay(
     assert hass.states.get(OCCUPANCY_ENTITY_ID).state == expected
 
 
+@pytest.mark.parametrize(
+    ("door", "seconds"),
+    [
+        pytest.param("off", DEFAULT_DOOR_CLOSED_DELAY, id="close-delay"),
+        pytest.param("on", DEFAULT_OPEN_DOOR_TIMEOUT, id="open-timeout"),
+    ],
+)
+async def test_door_attributes_preserve_timer(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    freezer: FrozenDateTimeFactory,
+    door: str,
+    seconds: int,
+) -> None:
+    """Test door attribute updates leave the original timer deadline intact."""
+    await setup_integration(hass, mock_config_entry)
+    hass.states.async_set(MOTION_ENTITY_ID, "on")
+    hass.states.async_set(DOOR_ENTITY_ID, "on")
+    await hass.async_block_till_done()
+    hass.states.async_set(MOTION_ENTITY_ID, "off")
+    await hass.async_block_till_done()
+    hass.states.async_set(DOOR_ENTITY_ID, door)
+    await hass.async_block_till_done()
+    await advance_time(hass, freezer, 10)
+    hass.states.async_set(DOOR_ENTITY_ID, door, {"battery_level": 90})
+    await hass.async_block_till_done()
+    assert hass.states.get(OCCUPANCY_ENTITY_ID).state == "on"
+    await advance_time(hass, freezer, seconds - 11)
+    assert hass.states.get(OCCUPANCY_ENTITY_ID).state == "on"
+    await advance_time(hass, freezer, 1)
+    assert hass.states.get(OCCUPANCY_ENTITY_ID).state == "off"
+
+
+async def test_door_close_cancels_open_timeout(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    freezer: FrozenDateTimeFactory,
+) -> None:
+    """Test a previous open timeout cannot shorten the door-close grace period."""
+    await setup_integration(hass, mock_config_entry)
+    hass.states.async_set(DOOR_ENTITY_ID, "on")
+    await hass.async_block_till_done()
+    await advance_time(hass, freezer, DEFAULT_OPEN_DOOR_TIMEOUT - 1)
+    hass.states.async_set(DOOR_ENTITY_ID, "off")
+    await hass.async_block_till_done()
+    await advance_time(hass, freezer, 1)
+    assert hass.states.get(OCCUPANCY_ENTITY_ID).state == "on"
+    await advance_time(hass, freezer, DEFAULT_DOOR_CLOSED_DELAY - 2)
+    assert hass.states.get(OCCUPANCY_ENTITY_ID).state == "on"
+    await advance_time(hass, freezer, 1)
+    assert hass.states.get(OCCUPANCY_ENTITY_ID).state == "off"
+
+
 async def test_door_reopens_cancels_close_delay(
     hass: HomeAssistant,
     mock_config_entry: MockConfigEntry,
