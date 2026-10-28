@@ -3,9 +3,9 @@
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
 [![Downloads][download-latest-shield]]()
-[![HACS Installs][hacs-installs-shield]]()
+[![Installs][marketplace-installs-shield]][hacs-install]
+[![marketplace][marketplacebadge]][marketplace]
 [![License][license-shield]](LICENSE)
-[![hacs][hacsbadge]][hacs]
 
 Wasp in a Box Helpers for Home Assistant
 
@@ -56,13 +56,13 @@ _Please :star: this repo if you find it useful_
 
 ## Installation
 
-### HACS
+### Marketplace/HACS
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=andrew-codechimp&repository=HA-Wasp-In-A-Box&category=Integration)
 
-Or search for it within HACS if My Home Assistant does not work for you
+Or search for it within Marketplace/HACS if My Home Assistant does not work for you
 
-Restart Home Assistant
+**Restart Home Assistant if using HACS**
 
 In the HA UI go to "Configuration" -> "Devices & services" -> "Helpers" click "+" and select "Wasp in a Box"
 
@@ -71,7 +71,7 @@ In the HA UI go to "Configuration" -> "Devices & services" -> "Helpers" click "+
 <details>
 <summary>Show detailed instructions</summary>
 
-Installation via HACS is recommended, but a manual setup is supported.
+Installation via Marketplace/HACS is recommended, but a manual setup is supported.
 
 1. Manually copy custom_components/wasp_in_a_box folder from latest release to custom_components folder in your config folder.
 1. Restart Home Assistant.
@@ -108,11 +108,14 @@ for:
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
 [commits]: https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/commits/main
-[hacs]: https://github.com/hacs/integration
-[hacsbadge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
-[exampleimg]: example.png
+[marketplace]: https://home-assistant.io/integrations/marketplace
+[marketplacebadge]: https://img.shields.io/badge/Marketplace-Default-41BDF5.svg?style=for-the-badge
 [license-shield]: https://img.shields.io/github/license/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
 [releases]: https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/releases
 [download-latest-shield]: https://img.shields.io/github/downloads/andrew-codechimp/HA-Wasp-In-A-Box/latest/total?style=for-the-badge
-[hacs-installs-shield]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Flauwbier.nl%2Fhacs%2Fwasp_in_a_box&style=for-the-badge
+
+[marketplace-installs-shield]: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fanalytics.home-assistant.io%2Fcustom_integrations.json&query=%24.wasp_in_a_box.total&style=for-the-badge&label=Marketplace%20installs
+[marketplace-install]: https://my.home-assistant.io/redirect/marketplace_repository/?owner=andrew-codechimp&repository=wasp_in_a_box&category=integration
+
+[hacs-install]: https://my.home-assistant.io/redirect/hacs_repository/?owner=andrew-codechimp&repository=HA-Wasp-In-A-Box&category=Integration
