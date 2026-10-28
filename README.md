@@ -48,7 +48,7 @@ Control when the helper transitions to "occupied":
 A reset action is provided that will set the state to unoccupied and cancel any timers.
 
 
-_Please :star: this repo if you find it useful_
+_Please ⭐ this repo on [GitHub][repository] if you find it useful_
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png)](https://www.buymeacoffee.com/codechimp)
 
@@ -114,6 +114,7 @@ for:
 [releases-shield]: https://img.shields.io/github/release/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
 [releases]: https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/releases
 [download-latest-shield]: https://img.shields.io/github/downloads/andrew-codechimp/HA-Wasp-In-A-Box/latest/total?style=for-the-badge
+[repository]: https://github.com/andrew-codechimp/HA-Wasp-In-A-Box
 
 [marketplace-installs-shield]: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fanalytics.home-assistant.io%2Fcustom_integrations.json&query=%24.wasp_in_a_box.total&style=for-the-badge&label=Marketplace%20installs
 [marketplace-install]: https://my.home-assistant.io/redirect/marketplace_repository/?owner=andrew-codechimp&repository=wasp_in_a_box&category=integration
