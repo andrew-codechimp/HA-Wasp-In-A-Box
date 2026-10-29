@@ -112,7 +112,8 @@ This is an `integration_type: "helper"` (not a device integration):
 
 - **Package manager**: `uv` (not pip/poetry)
 - Python version: `requires-python = ">=3.14.2"` in `pyproject.toml`
-- HA version: Currently `homeassistant==2026.4.0` (update as new HA releases are available)
+- HA version: Currently `homeassistant==2026.8.0`, paired with `pytest-homeassistant-custom-component==0.13.354`.
+- The dev group contains HA, its test plugin, mypy, and Ruff. Run full HA/device integrations from a separate development environment.
 - **All deps in `[dependency-groups]` dev section** - no production deps (empty `dependencies` list)
 
 ## Common Tasks

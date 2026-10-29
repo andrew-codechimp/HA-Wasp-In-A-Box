@@ -39,9 +39,9 @@
 # name: test_entity[binary_sensor.waspinabox-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'occupancy',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'occupancy',
       'door_sensor_state': 'off',
-      'friendly_name': 'WaspInABox',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'WaspInABox',
       'motion_sensor_state': 'off',
     }),
     'context': <ANY>,
