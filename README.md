@@ -54,30 +54,15 @@ _Please ⭐ this repo on [GitHub][repository] if you find it useful_
 
 ![Helper Creation](https://raw.githubusercontent.com/andrew-codechimp/ha-wasp-in-a-box/main/images/helper-create.png "Helper Creation")
 
-## Installation
-
-### Marketplace/HACS
+## Marketplace/HACS Installation
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=andrew-codechimp&repository=HA-Wasp-In-A-Box&category=Integration)
 
-Or search for it within Marketplace/HACS if My Home Assistant does not work for you
+Or search for Wasp in a Box within Marketplace/HACS if My Home Assistant does not work for you
 
 **Restart Home Assistant if using HACS**
 
 In the HA UI go to "Configuration" -> "Devices & services" -> "Helpers" click "+" and select "Wasp in a Box"
-
-### Manual Installation
-
-<details>
-<summary>Show detailed instructions</summary>
-
-Installation via Marketplace/HACS is recommended, but a manual setup is supported.
-
-1. Manually copy custom_components/wasp_in_a_box folder from latest release to custom_components folder in your config folder.
-1. Restart Home Assistant.
-1. In the HA UI go to "Configuration" -> "Devices & services" -> "Helpers" click "+" and select "Wasp in a Box"
-
-</details>
 
 A new Wasp in a Box helper will be available within Settings/Helpers or click the My link to jump straight there
 
