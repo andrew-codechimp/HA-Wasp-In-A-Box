@@ -1,3 +1,4 @@
+<!-- ha-marketplace:exclude-start -->
 # Wasp In A Box
 
 [![GitHub Release][releases-shield]][releases]
@@ -9,6 +10,7 @@
 
 Wasp in a Box Helpers for Home Assistant
 
+<!-- ha-marketplace:exclude-end -->
 ## Overview
 
 Wasp in a Box is an automation pattern for enclosed rooms (such as bathrooms) that helps determine reliable occupancy while a person remains inside, even if out of range of the motion sensor or being still.
@@ -54,6 +56,7 @@ _Please ⭐ this repo on [GitHub][repository] if you find it useful_
 
 ![Helper Creation](https://raw.githubusercontent.com/andrew-codechimp/ha-wasp-in-a-box/main/images/helper-create.png "Helper Creation")
 
+<!-- ha-marketplace:exclude-start -->
 ## Marketplace/HACS Installation
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=andrew-codechimp&repository=HA-Wasp-In-A-Box&category=Integration)
@@ -68,6 +71,7 @@ A new Wasp in a Box helper will be available within Settings/Helpers or click th
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=wasp_in_a_box)
 
+<!-- ha-marketplace:exclude-end -->
 ## Tips & FAQ's
 - If occupancy clears after you shut the door but are in the room then ensure the door closed delay is set accurately. Too long and there's a chance that a lack of movement will cause it to think the room was quickly exited. For Philips Hue motion sensors I find 25 seconds to be about right but time your sensor by starting a stopwatch when you close the door with no one in the room and watch the Home Assistant sensor to determine the exact time it clears, then add approximately 10 seconds to it.
 
