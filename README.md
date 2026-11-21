@@ -1,7 +1,6 @@
 <!-- ha-marketplace:exclude-start -->
 # Wasp In A Box
 
-[![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
 [![Downloads][download-latest-shield]]()
 [![Installs][marketplace-installs-shield]][hacs-install]
@@ -100,8 +99,6 @@ for:
 [marketplace]: https://home-assistant.io/integrations/marketplace
 [marketplacebadge]: https://img.shields.io/badge/Marketplace-Default-41BDF5.svg?style=for-the-badge
 [license-shield]: https://img.shields.io/github/license/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/andrew-codechimp/HA-Wasp-In-A-Box.svg?style=for-the-badge
-[releases]: https://github.com/andrew-codechimp/HA-Wasp-In-A-Box/releases
 [download-latest-shield]: https://img.shields.io/github/downloads/andrew-codechimp/HA-Wasp-In-A-Box/latest/total?style=for-the-badge
 [repository]: https://github.com/andrew-codechimp/HA-Wasp-In-A-Box
 
