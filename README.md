@@ -10,8 +10,6 @@
 Wasp in a Box Helpers for Home Assistant
 
 <!-- ha-marketplace:exclude-end -->
-## Overview
-
 Wasp in a Box is an automation pattern for enclosed rooms (such as bathrooms) that helps determine reliable occupancy while a person remains inside, even if out of range of the motion sensor or being still.
 
 This helper is designed for single occupancy enclosed spaces where the door is shut when occupied, it will not work for multiple occupancy.
